@@ -38,7 +38,12 @@ repositories {
 
 println("here it is: ${project.projectDir}")
 
+//apply plugin: 'java'
+
+
 model {
+
+
     platforms {
         ['windows', 'linux', 'osx', 'freebsd-10', 'solaris'].each { os ->
             ['x64'].each { arch ->
@@ -64,10 +69,12 @@ model {
             dependencies {
                 module 'com.github.bgorven:Loader:0.0.2'
             }
+
+
         }
-        'realsense-jvm'(JNILibrarySpec) { jniLibSpec ->
+        'native'(JNILibrarySpec) { jniLibSpec ->
             library "main"
-            nativeClass "org.librealsense.Sensor"
+            nativeClass "org.librealsense.Native"
 
             $.platforms.all {
                 jniLibSpec.targetPlatform it.name
@@ -101,7 +108,7 @@ model {
             dependsOn $.tasks.mainJar
             classpath compile.classpath
             classpath jar.outputs
-            main = 'org.librealsense.Sensor'
+            main = 'org.librealsense.Native'
         }
 
 //        def hash = 'git rev-parse --short HEAD'.execute().text.trim()
