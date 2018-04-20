@@ -63,6 +63,102 @@ JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2SupportsDeviceInfo
 JNIEXPORT jstring JNICALL Java_org_librealsense_Native_rs2GetDeviceInfo
   (JNIEnv *, jclass, jlong, jint);
 
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2CreatePipeline
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreatePipeline
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2CreateConfig
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateConfig
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2ConfigEnableStream
+ * Signature: (JIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigEnableStream
+  (JNIEnv *, jclass, jlong, jint, jint, jint, jint, jint, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2PipelineStartWithConfig
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineStartWithConfig
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2PipelineWaitForFrames
+ * Signature: (JI)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineWaitForFrames
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2EmbeddedFramesCount
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2EmbeddedFramesCount
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2ExtractFrame
+ * Signature: (JI)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2ExtractFrame
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2ReleaseFrame
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2ReleaseFrame
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2IsFrameExtendableTo
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2IsFrameExtendableTo
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2GetFrameWidth
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetFrameWidth
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2GetFrameHeight
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetFrameHeight
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2DepthFrameGetDistance
+ * Signature: (JII)F
+ */
+JNIEXPORT jfloat JNICALL Java_org_librealsense_Native_rs2DepthFrameGetDistance
+  (JNIEnv *, jclass, jlong, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif
