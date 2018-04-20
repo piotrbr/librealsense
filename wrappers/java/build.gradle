@@ -2,9 +2,6 @@ buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies {
-        classpath group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.24'
-    }
 }
 
 plugins {
@@ -15,9 +12,6 @@ plugins {
     id 'org.bven.jniplugin' version '0.0.5'
 }
 
-//import com.amazonaws.services.s3.transfer.TransferManager
-//def aws_bucket='bgorven-hello'
-//def aws_region=System.env.AWS_DEFAULT_REGION
 
 version = '0.0'
 group = 'org.librealsense'
@@ -36,10 +30,8 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-println("here it is: ${project.projectDir}")
 
 //apply plugin: 'java'
-
 
 model {
 
@@ -55,14 +47,6 @@ model {
         }
     }
 
-    toolChains {
-        if (project.hasProperty('vs2015')) {
-            //https://discuss.gradle.org/t/automatic-detection-of-visual-studio-community-2015-rc-not-working-properly/10309
-            visualCpp(VisualCpp) {
-                installDir "C:/Program Files (x86)/Microsoft Visual Studio 14.0"
-            }
-        }
-    }
 
     components {
         main(JvmLibrarySpec) {
@@ -85,9 +69,11 @@ model {
                 cppCompiler.args "-I${project.projectDir}/../../include"
                 linker.args "-L${project.projectDir}/../../"
                 linker.args "-lrealsense2"
-                if (project.hasProperty('vs2015') && targetPlatform.operatingSystem.windows) {
+
+                if (targetPlatform.operatingSystem.windows) {
+
                     // https://github.com/couchbase/couchbase-lite-java-native/issues/23
-                    cppCompiler.args "/IC:/Program Files (x86)/Windows Kits/10/Include/10.0.10586.0/ucrt"
+                    //cppCompiler.args "/IC:/Program Files (x86)/Windows Kits/10/Include/10.0.10586.0/ucrt"
                     def arch = {if (targetPlatform.architecture.name.contains('arm')) {
                         'arm'
                     } else if (targetPlatform.architecture.name.contains('64')) {
@@ -95,7 +81,12 @@ model {
                     } else {
                         'x86'
                     }}()
-                    linker.args "/LIBPATH:C:/Program Files (x86)/Windows Kits/10/Lib/10.0.10586.0/ucrt/${arch}"
+
+//                    linker.args "/LIBPATH:C:/Program Files (x86)/Windows Kits/10/Lib/10.0.10586.0/ucrt/${arch}"
+                    cppCompiler.args "-I${project.projectDir}/../../include"
+                    linker.args "/LIBPATH:${project.projectDir}/../../Debug/"
+                    linker.args "realsense2.lib"
+
                 }
             }
         }
@@ -111,35 +102,8 @@ model {
             main = 'org.librealsense.Native'
         }
 
-//        def hash = 'git rev-parse --short HEAD'.execute().text.trim()
-//        upload(Task) {
-//            dependsOn $.tasks.processMainJarMainResources
-//            doLast {
-//                new TransferManager().uploadDirectory(aws_bucket, hash, project.file('src/main/resources/lib'), true).waitForCompletion()
-//            }
-//        }
-
-	/*
-        if (!project.hasProperty('noDownload')) {
-            download(Task) {
-                doLast {
-                    def url = "https://${aws_bucket}.s3-${aws_region}.amazonaws.com"
-                    new XmlSlurper().parse(new URL("${url}?prefix=${hash}/").openStream()).Contents.Key.each { key ->
-                        def dest = project.file('src/main/resources/lib/' + "${key}".replace("${hash}/", ''))
-                        dest.parentFile.mkdirs()
-                        dest.withOutputStream{
-                            it << new URL("${url}/${key}").openStream()
-                        }
-                    }
-                }
-            }
-            processMainJarMainResources {
-                dependsOn $.tasks.download
-            }
-        }
-	*/
         wrapper {
-            gradleVersion = '4.4'
+            gradleVersion = '4.7'
         }
     }
 

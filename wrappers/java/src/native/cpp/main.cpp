@@ -45,7 +45,8 @@ JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2SupportsDeviceInfo
   (JNIEnv *, jclass, jlong deviceAddr, jint cameraInfo) {
 
     rs2_device* device = (rs2_device*) deviceAddr;
-    rs2_supports_device_info(device, static_cast<rs2_camera_info>(cameraInfo), NULL);
+    int supported = rs2_supports_device_info(device, static_cast<rs2_camera_info>(cameraInfo), NULL);
+    return (jint) supported;
 }
 
 JNIEXPORT jstring JNICALL Java_org_librealsense_Native_rs2GetDeviceInfo
@@ -114,7 +115,7 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2ExtractFrame
 }
 
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2ReleaseFrame
-  (JNIEnv *, jclass frameAddr, jlong) {
+  (JNIEnv *, jclass, jlong frameAddr) {
     rs2_frame* frame = (rs2_frame*) frameAddr;
     rs2_release_frame(frame);
     return (jlong)0;
