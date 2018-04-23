@@ -18,7 +18,6 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateContext
 
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2QueryDevices
   (JNIEnv *, jclass, jlong contextAddr) {
-
     rs2_context* context = (rs2_context*) contextAddr;
     rs2_device_list* device_list = rs2_query_devices(context, NULL);
     return (jlong)device_list;
@@ -26,7 +25,6 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2QueryDevices
 
 JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetDeviceCount
   (JNIEnv *, jclass, jlong deviceListAddr) {
-
     rs2_device_list* device_list = (rs2_device_list*) deviceListAddr;
     int count = rs2_get_device_count(device_list, NULL);
     return (jint) count;
@@ -35,7 +33,6 @@ JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetDeviceCount
 
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateDevice
   (JNIEnv *, jclass, jlong deviceListAddr, jint deviceIndex) {
-
     rs2_device_list* device_list = (rs2_device_list*) deviceListAddr;
     rs2_device* device = rs2_create_device(device_list, deviceIndex, NULL);
     return (jlong) device;
@@ -43,7 +40,6 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateDevice
 
 JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2SupportsDeviceInfo
   (JNIEnv *, jclass, jlong deviceAddr, jint cameraInfo) {
-
     rs2_device* device = (rs2_device*) deviceAddr;
     int supported = rs2_supports_device_info(device, static_cast<rs2_camera_info>(cameraInfo), NULL);
     return (jint) supported;
@@ -78,10 +74,8 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigEnableStream
 
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineStartWithConfig
   (JNIEnv *, jclass, jlong pipelineAddr, jlong configAddr) {
-
     rs2_pipeline* pipeline = (rs2_pipeline*) pipelineAddr;
     rs2_config *config = (rs2_config*) configAddr;
-
     rs2_error *e = 0;
     rs2_pipeline_profile* pipeline_profile = rs2_pipeline_start_with_config(pipeline, config, &e);
 
@@ -144,4 +138,18 @@ JNIEXPORT jfloat JNICALL Java_org_librealsense_Native_rs2DepthFrameGetDistance
     rs2_frame* frame = (rs2_frame*)frameAddr;
     float depth = rs2_depth_frame_get_distance(frame, x, y, NULL);
     return (jfloat)depth;
+}
+
+JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetFrameData
+  (JNIEnv *env, jclass, jlong frameAddr) {
+    rs2_frame* frame = (rs2_frame*) frameAddr;
+    int width = rs2_get_frame_width(frame, NULL);
+    int height = rs2_get_frame_height(frame, NULL);
+
+    // TODO: calculate the correct capacity according to the data type.
+    int capacity = width * height * 2;
+
+    const void * data = rs2_get_frame_data(frame, NULL);
+    jobject directBuffer = env->NewDirectByteBuffer((void*)(data), capacity);
+    return directBuffer;
 }

@@ -9,14 +9,6 @@ extern "C" {
 #endif
 /*
  * Class:     org_librealsense_Native
- * Method:    helloThere
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_librealsense_Native_helloThere
-  (JNIEnv *, jclass);
-
-/*
- * Class:     org_librealsense_Native
  * Method:    rs2CreateContext
  * Signature: (I)J
  */
@@ -161,34 +153,10 @@ JNIEXPORT jfloat JNICALL Java_org_librealsense_Native_rs2DepthFrameGetDistance
 
 /*
  * Class:     org_librealsense_Native
- * Method:    rs2SendAndReceiveRawData
- * Signature: (JLjava/nio/Buffer;I)J
+ * Method:    rs2GetFrameData
+ * Signature: (J)Ljava/nio/ByteBuffer;
  */
-JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2SendAndReceiveRawData
-  (JNIEnv *, jclass, jlong, jobject, jint);
-
-/*
- * Class:     org_librealsense_Native
- * Method:    rs2DeleteRawData
- * Signature: (J)V
- */
-JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteRawData
-  (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     org_librealsense_Native
- * Method:    rs2GetRawData
- * Signature: (J)Ljava/nio/Buffer;
- */
-JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetRawData
-  (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     org_librealsense_Native
- * Method:    rs2GetRawDataSize
- * Signature: (J)I
- */
-JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetRawDataSize
+JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetFrameData
   (JNIEnv *, jclass, jlong);
 
 #ifdef __cplusplus

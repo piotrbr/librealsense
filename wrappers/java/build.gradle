@@ -26,12 +26,8 @@ if (!placeholder.exists()) {
 }
 placeholder.deleteOnExit()
 
-repositories {
-    maven { url "https://jitpack.io" }
-}
 
-
-//apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 model {
 
@@ -53,9 +49,8 @@ model {
             dependencies {
                 module 'com.github.bgorven:Loader:0.0.2'
             }
-
-
         }
+
         'native'(JNILibrarySpec) { jniLibSpec ->
             library "main"
             nativeClass "org.librealsense.Native"
@@ -74,13 +69,15 @@ model {
 
                     // https://github.com/couchbase/couchbase-lite-java-native/issues/23
                     //cppCompiler.args "/IC:/Program Files (x86)/Windows Kits/10/Include/10.0.10586.0/ucrt"
-                    def arch = {if (targetPlatform.architecture.name.contains('arm')) {
-                        'arm'
-                    } else if (targetPlatform.architecture.name.contains('64')) {
-                        'x64'
-                    } else {
-                        'x86'
-                    }}()
+                    def arch = {
+                        if (targetPlatform.architecture.name.contains('arm')) {
+                            'arm'
+                        } else if (targetPlatform.architecture.name.contains('64')) {
+                            'x64'
+                        } else {
+                            'x86'
+                        }
+                    }()
 
 //                    linker.args "/LIBPATH:C:/Program Files (x86)/Windows Kits/10/Lib/10.0.10586.0/ucrt/${arch}"
                     cppCompiler.args "-I${project.projectDir}/../../include"
@@ -109,8 +106,14 @@ model {
 
     publishing {
         publications {
-            mavenJava(MavenPublication)
+            impl(MavenPublication) {
+                groupId 'org.librealsense'
+                artifactId 'realsense-jvm'
+                version '0.1'
+                artifact $.tasks.createMainJar
+            }
         }
     }
 }
+
 

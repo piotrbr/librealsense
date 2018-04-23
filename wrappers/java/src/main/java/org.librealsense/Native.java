@@ -3,25 +3,56 @@ package org.librealsense;
 import org.bven.jni.*;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 public class Native {
 
     static {
 
-        ArchLoader.load("realsense2", "/lib/org.librealsense", Native.class);
-        ArchLoader.load("native", "/lib/org.librealsense", Native.class);
+        System.out.println("here we are now.");
+
+        InputStream stream = Native.class.getResourceAsStream("/lib/org.librealsense/windows-x64/native.dll");
+
+        try {
+            File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+            File jinectDir = new File(tmpDir, "librealsense-jvm");
+            jinectDir.mkdirs();
+
+
+            File jinectLib = new File(jinectDir, "native.dll");
+
+            if (true || !jinectLib.exists()) {
+                OutputStream out = new FileOutputStream(jinectLib);
+                byte[] buffer = new byte[1024];
+                int len;
+                while (( len = stream.read(buffer)) != -1) {
+                    out.write(buffer, 0, len);
+                }
+                out.close();
+            }
+            System.load(jinectLib.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("byebye");
+//        ArchLoader.load("realsense2", "/lib/org.librealsense", Native.class);
+//        ArchLoader.load("native", "/lib/org.librealsense", Native.class);
 //        ArchLoader.load(Native.class);
     }
 
-    static int RS2_CAMERA_INFO_NAME = 0;
-    static int RS2_CAMERA_INFO_SERIAL_NUMBER = 1;
-    static int RS2_CAMERA_INFO_FIRMWARE_VERSION = 2;
-    static int RS2_CAMERA_INFO_PHYSICAL_PORT = 3;
-    static int RS2_CAMERA_INFO_DEBUG_OP_CODE = 4;
-    static int RS2_CAMERA_INFO_ADVANCED_MODE = 5;
-    static int RS2_CAMERA_INFO_CAMERA_LOCKED = 6;
-    static int RS2_CAMERA_INFO_USB_TYPE_DESCRIPTOR = 7;
-    static int RS2_CAMERA_INFO_COUNT = 8;
+    public static int RS2_CAMERA_INFO_NAME = 0;
+    public static int RS2_CAMERA_INFO_SERIAL_NUMBER = 1;
+    public static int RS2_CAMERA_INFO_FIRMWARE_VERSION = 2;
+    public static int RS2_CAMERA_INFO_PHYSICAL_PORT = 3;
+    public static int RS2_CAMERA_INFO_DEBUG_OP_CODE = 4;
+    public static int RS2_CAMERA_INFO_ADVANCED_MODE = 5;
+    public static int RS2_CAMERA_INFO_CAMERA_LOCKED = 6;
+    public static int RS2_CAMERA_INFO_USB_TYPE_DESCRIPTOR = 7;
+    public static int RS2_CAMERA_INFO_COUNT = 8;
 
 
     public static enum Stream {
@@ -138,43 +169,41 @@ public class Native {
 
     }
 
-    native static void helloThere();
 
-    native static long rs2CreateContext(int apiVersion);
+    public native static long rs2CreateContext(int apiVersion);
 
-    native static long rs2QueryDevices(long contex);
+    public native static long rs2QueryDevices(long contex);
 
-    native static int rs2GetDeviceCount(long deviceList);
+    public native static int rs2GetDeviceCount(long deviceList);
 
-    native static long rs2CreateDevice(long deviceList, int deviceIndex);
+    public native static long rs2CreateDevice(long deviceList, int deviceIndex);
 
-    native static int rs2SupportsDeviceInfo(long device, int info);
+    public native static int rs2SupportsDeviceInfo(long device, int info);
 
-    native static String rs2GetDeviceInfo(long device, int info);
+    public native static String rs2GetDeviceInfo(long device, int info);
 
-    native static long rs2CreatePipeline(long context);
+    public native static long rs2CreatePipeline(long context);
 
-    native static long rs2CreateConfig();
+    public native static long rs2CreateConfig();
 
-    native static void rs2ConfigEnableStream(long config, int stream, int index, int width, int height, int format, int framerate);
+    public native static void rs2ConfigEnableStream(long config, int stream, int index, int width, int height, int format, int framerate);
 
-    native static long rs2PipelineStartWithConfig(long pipeline, long config);
+    public native static long rs2PipelineStartWithConfig(long pipeline, long config);
 
-    native static long rs2PipelineWaitForFrames(long pipeline, int timeOut);
-    native static int rs2EmbeddedFramesCount(long frames);
-    native static long rs2ExtractFrame(long frames, int index);
-    native static long rs2ReleaseFrame(long frame);
-    native static int rs2IsFrameExtendableTo(long frame, int extension);
-    native static int rs2GetFrameWidth(long frame);
-    native static int rs2GetFrameHeight(long frame);
-    native static float rs2DepthFrameGetDistance(long frame, int x, int y);
+    public native static long rs2PipelineWaitForFrames(long pipeline, int timeOut);
+    public native static int rs2EmbeddedFramesCount(long frames);
+    public native static long rs2ExtractFrame(long frames, int index);
+    public native static long rs2ReleaseFrame(long frame);
+    public native static int rs2IsFrameExtendableTo(long frame, int extension);
+    public native static int rs2GetFrameWidth(long frame);
+    public native static int rs2GetFrameHeight(long frame);
+    public native static float rs2DepthFrameGetDistance(long frame, int x, int y);
 
-    native static ByteBuffer rs2GetFrameData(long frame);
+    public native static ByteBuffer rs2GetFrameData(long frame);
 
 
 
     public static void main(String[] args) {
-        Native.helloThere();
         long context = rs2CreateContext(0);
         long deviceList = rs2QueryDevices(context);
         int deviceCount = rs2GetDeviceCount(deviceList);
