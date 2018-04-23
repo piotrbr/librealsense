@@ -90,7 +90,6 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineStartWithConfig
     }
 
     return (jlong)pipeline_profile;
-
 }
 
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineWaitForFrames

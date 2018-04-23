@@ -159,6 +159,38 @@ JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetFrameHeight
 JNIEXPORT jfloat JNICALL Java_org_librealsense_Native_rs2DepthFrameGetDistance
   (JNIEnv *, jclass, jlong, jint, jint);
 
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2SendAndReceiveRawData
+ * Signature: (JLjava/nio/Buffer;I)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2SendAndReceiveRawData
+  (JNIEnv *, jclass, jlong, jobject, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2DeleteRawData
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteRawData
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2GetRawData
+ * Signature: (J)Ljava/nio/Buffer;
+ */
+JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetRawData
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2GetRawDataSize
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetRawDataSize
+  (JNIEnv *, jclass, jlong);
+
 #ifdef __cplusplus
 }
 #endif

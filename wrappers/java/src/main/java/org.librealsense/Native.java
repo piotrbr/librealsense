@@ -1,6 +1,8 @@
 package org.librealsense;
 
 import org.bven.jni.*;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 
 public class Native {
 
@@ -167,6 +169,10 @@ public class Native {
     native static int rs2GetFrameHeight(long frame);
     native static float rs2DepthFrameGetDistance(long frame, int x, int y);
 
+    native static ByteBuffer rs2GetFrameData(long frame);
+
+
+
     public static void main(String[] args) {
         Native.helloThere();
         long context = rs2CreateContext(0);
@@ -190,7 +196,7 @@ public class Native {
             System.out.println("physical port:" + rs2GetDeviceInfo(device, RS2_CAMERA_INFO_PHYSICAL_PORT));
 
             System.out.println("supports debug op code: " + rs2SupportsDeviceInfo(device, RS2_CAMERA_INFO_DEBUG_OP_CODE));
-            System.out.println("debyg op code:" + rs2GetDeviceInfo(device, RS2_CAMERA_INFO_DEBUG_OP_CODE));
+            System.out.println("debug op code:" + rs2GetDeviceInfo(device, RS2_CAMERA_INFO_DEBUG_OP_CODE));
 
             System.out.println("supports advanced mode: " + rs2SupportsDeviceInfo(device, RS2_CAMERA_INFO_ADVANCED_MODE));
             System.out.println("advanced mode:" + rs2GetDeviceInfo(device, RS2_CAMERA_INFO_ADVANCED_MODE));
@@ -209,6 +215,7 @@ public class Native {
         rs2PipelineStartWithConfig(pipeline, config);
 
 
+
         while (true) {
             long frames = rs2PipelineWaitForFrames(pipeline, 5000);
             int frameCount = rs2EmbeddedFramesCount(frames);
@@ -219,6 +226,13 @@ public class Native {
                 int height = rs2GetFrameHeight(frame);
                 float depth = rs2DepthFrameGetDistance(frame, 320, 240);
                 System.out.println("depth:" + depth);
+
+                ByteBuffer buffer = rs2GetFrameData(frame);
+                CharBuffer cb = buffer.asCharBuffer();
+
+
+                int cd = cb.get(240 * width + 320);
+                System.out.println(cd);
 
                 rs2ReleaseFrame(frame);
             }
