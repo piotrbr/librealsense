@@ -73,11 +73,43 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateConfig
 
 /*
  * Class:     org_librealsense_Native
+ * Method:    rs2DeleteConfig
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteConfig
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
  * Method:    rs2ConfigEnableStream
  * Signature: (JIIIIII)V
  */
 JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigEnableStream
   (JNIEnv *, jclass, jlong, jint, jint, jint, jint, jint, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2ConfigEnableDevice
+ * Signature: (JLjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigEnableDevice
+  (JNIEnv *, jclass, jlong, jstring);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2ConfigDisableStream
+ * Signature: (JJ)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigDisableStream
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2ConfigCanResolve
+ * Signature: (JJ)I
+ */
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2ConfigCanResolve
+  (JNIEnv *, jclass, jlong, jlong);
 
 /*
  * Class:     org_librealsense_Native

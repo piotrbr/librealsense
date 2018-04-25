@@ -1,6 +1,5 @@
 package org.librealsense;
 
-import org.bven.jni.*;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.io.InputStream;
@@ -185,8 +184,13 @@ public class Native {
     public native static long rs2CreatePipeline(long context);
 
     public native static long rs2CreateConfig();
+    public native static void rs2DeleteConfig(long config);
+
 
     public native static void rs2ConfigEnableStream(long config, int stream, int index, int width, int height, int format, int framerate);
+    public native static void rs2ConfigEnableDevice(long config, String serial);
+    public native static void rs2ConfigDisableStream(long config, long stream);
+    public native static int rs2ConfigCanResolve(long config, long pipeline);
 
     public native static long rs2PipelineStartWithConfig(long pipeline, long config);
 
