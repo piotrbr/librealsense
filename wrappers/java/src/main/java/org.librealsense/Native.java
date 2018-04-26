@@ -201,6 +201,8 @@ public class Native {
     public native static int rs2IsFrameExtendableTo(long frame, int extension);
     public native static int rs2GetFrameWidth(long frame);
     public native static int rs2GetFrameHeight(long frame);
+    public native static int rs2GetFrameStrideInBytes(long frame);
+
     public native static float rs2DepthFrameGetDistance(long frame, int x, int y);
 
     public native static ByteBuffer rs2GetFrameData(long frame);

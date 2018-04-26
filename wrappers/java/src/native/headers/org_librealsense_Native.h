@@ -177,6 +177,14 @@ JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetFrameHeight
 
 /*
  * Class:     org_librealsense_Native
+ * Method:    rs2GetFrameStrideInBytes
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetFrameStrideInBytes
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
  * Method:    rs2DepthFrameGetDistance
  * Signature: (JII)F
  */

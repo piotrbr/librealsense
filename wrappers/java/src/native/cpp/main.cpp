@@ -184,6 +184,12 @@ JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetFrameHeight
     return (jint)rs2_get_frame_height(frame, NULL);
 }
 
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetFrameStrideInBytes
+  (JNIEnv *, jclass, jlong frameAddr) {
+    rs2_frame* frame = (rs2_frame*)frameAddr;
+    return (jint)rs2_get_frame_stride_in_bytes(frame, NULL);
+}
+
 JNIEXPORT jfloat JNICALL Java_org_librealsense_Native_rs2DepthFrameGetDistance
   (JNIEnv *env, jclass, jlong frameAddr, jint x, jint y) {
     rs2_frame* frame = (rs2_frame*)frameAddr;
@@ -198,9 +204,8 @@ JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetFrameData
 
     int width = rs2_get_frame_width(frame, NULL);
     int height = rs2_get_frame_height(frame, NULL);
-
-    // TODO: calculate the correct capacity according to the data type.
-    int capacity = width * height * 2;
+    int stride = rs2_get_frame_stride_in_bytes(frame, NULL);
+    int capacity = stride * height;
 
     const void * data = rs2_get_frame_data(frame, &error);
     checkErrors(env, error);
