@@ -33,4 +33,9 @@ public class Frame {
         return Native.rs2GetFrameStrideInBytes(frame);
     }
 
+//    public float distance(int x, int y) {
+////        return Native.rs2
+//    }
+
+
 }

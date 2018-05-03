@@ -1,6 +1,7 @@
 #include "org_librealsense_Native.h"
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <librealsense2/rs.h>
 #include <librealsense2/h/rs_pipeline.h>
 #include <librealsense2/h/rs_frame.h>
@@ -124,6 +125,17 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineStartWithConfig
     return (jlong)pipeline_profile;
 }
 
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineProfileGetStreams
+  (JNIEnv *env, jclass, jlong pipelineProfileAddr)  {
+    rs2_pipeline_profile* pipelineProfile = (rs2_pipeline_profile*) pipelineProfileAddr;
+    rs2_error *error = NULL;
+
+    rs2_stream_profile_list*  list = rs2_pipeline_profile_get_streams(pipelineProfile, &error);
+    checkErrors(env, error);
+    return (jlong)list;
+
+}
+
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineWaitForFrames
   (JNIEnv *env, jclass, jlong pipelineAddr, jint timeOut) {
     rs2_error *error = NULL;
@@ -211,4 +223,125 @@ JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetFrameData
     checkErrors(env, error);
     jobject directBuffer = env->NewDirectByteBuffer((void*)(data), capacity);
     return directBuffer;
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2QuerySensors
+  (JNIEnv *env, jclass, jlong deviceAddr) {
+    rs2_error *error = NULL;
+    rs2_device* device = (rs2_device*) deviceAddr;
+    rs2_sensor_list* sensorList = rs2_query_sensors(device, &error);
+    checkErrors(env, error);
+    return (jlong)sensorList;
+}
+
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetSensorsCount
+  (JNIEnv *env, jclass, jlong sensorListAddr) {
+    rs2_error *error = NULL;
+    rs2_sensor_list* sensorList = (rs2_sensor_list*)sensorListAddr;
+    int count = rs2_get_sensors_count(sensorList, &error);
+    checkErrors(env, error);
+    return (jint)count;
+ }
+
+ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteSensorList
+   (JNIEnv *, jclass, jlong sensorListAddr) {
+    rs2_sensor_list *sensorList = (rs2_sensor_list*) sensorListAddr;
+    rs2_delete_sensor_list(sensorList);
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteSensor
+  (JNIEnv *, jclass, jlong sensorAddr) {
+    rs2_sensor *sensor = (rs2_sensor*) sensorAddr;
+    rs2_delete_sensor(sensor);
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateSensor
+  (JNIEnv *env, jclass, jlong sensorListAddr, jint index) {
+    rs2_error *error = NULL;
+    rs2_sensor_list *sensorList = (rs2_sensor_list*) sensorListAddr;
+    rs2_sensor* sensor = rs2_create_sensor(sensorList, index, &error);
+    checkErrors(env, error);
+    return (jlong)sensor;
+}
+
+JNIEXPORT jstring JNICALL Java_org_librealsense_Native_rs2GetSensorInfo
+  (JNIEnv *env, jclass, jlong sensorAddr, jint cameraInfo) {
+    rs2_error *error = NULL;
+    rs2_sensor* sensor = (rs2_sensor*) sensorAddr;
+
+    const char *info = rs2_get_sensor_info(sensor, static_cast<rs2_camera_info>(cameraInfo), &error);
+    jstring jInfo = env->NewStringUTF(info);
+    return jInfo;
+}
+
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2SupportsSensorInfo
+  (JNIEnv *env, jclass, jlong sensorAddr, jint cameraInfo) {
+    rs2_error *error = NULL;
+    rs2_sensor* sensor = (rs2_sensor*) sensorAddr;
+
+    int supported = rs2_supports_sensor_info(sensor, static_cast<rs2_camera_info>(cameraInfo), &error);
+    checkErrors(env, error);
+
+    return (jint) supported;
+}
+
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2IsSensorExtendableTo
+  (JNIEnv *env, jclass, jlong sensorAddr, jint extension) {
+    rs2_error *error = NULL;
+    rs2_sensor* sensor = (rs2_sensor*) sensorAddr;
+    int extendable = rs2_is_sensor_extendable_to(sensor, static_cast<rs2_extension>(extension), &error);
+    checkErrors(env, error);
+    return (jint)extendable;
+}
+
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetStreamProfiles
+  (JNIEnv *env, jclass, jlong sensorAddr) {
+    rs2_error *error = NULL;
+    rs2_sensor* sensor = (rs2_sensor*) sensorAddr;
+    rs2_stream_profile_list* streamProfileList = rs2_get_stream_profiles(sensor, &error);
+    checkErrors(env, error);
+    return (jlong)streamProfileList;
+}
+
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetStreamProfilesCount
+  (JNIEnv *env, jclass, jlong streamProfileListAddr) {
+    rs2_error *error = NULL;
+
+    rs2_stream_profile_list* streamProfileList = (rs2_stream_profile_list*) streamProfileListAddr;
+    int count = rs2_get_stream_profiles_count(streamProfileList, &error);
+    checkErrors(env, error);
+    return (jint)count;
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteStreamProfilesList
+  (JNIEnv *, jclass, jlong streamProfileListAddr) {
+    rs2_stream_profile_list* streamProfileList = (rs2_stream_profile_list*) streamProfileListAddr;
+    rs2_delete_stream_profiles_list(streamProfileList);
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetStreamProfile
+  (JNIEnv *env, jclass, jlong streamProfileListAddr, jint index) {
+    rs2_error *error = NULL;
+
+    rs2_stream_profile_list* streamProfileList = (rs2_stream_profile_list*) streamProfileListAddr;
+    const rs2_stream_profile* streamProfile = rs2_get_stream_profile(streamProfileList, index, &error);
+
+    checkErrors(env, error);
+    return (jlong) streamProfile;
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteStreamProfile
+  (JNIEnv *, jclass, jlong streamProfileAddr) {
+  rs2_stream_profile* streamProfile = (rs2_stream_profile*) streamProfileAddr;
+  rs2_delete_stream_profile(streamProfile);
+ }
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetVideoStreamIntrinsics
+  (JNIEnv *, jclass, jlong streamProfileAddr) {
+    rs2_error *error = NULL;
+    rs2_stream_profile* streamProfile = (rs2_stream_profile*) streamProfileAddr;
+    rs2_intrinsics* intrinsics = (rs2_intrinsics*)malloc(sizeof(rs2_intrinsics));
+    rs2_get_video_stream_intrinsics(streamProfile, intrinsics, &error);
+    return (jlong)intrinsics;
 }

@@ -121,6 +121,14 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineStartWithConfig
 
 /*
  * Class:     org_librealsense_Native
+ * Method:    rs2PipelineProfileGetStreams
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineProfileGetStreams
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
  * Method:    rs2PipelineWaitForFrames
  * Signature: (JI)J
  */
@@ -197,6 +205,142 @@ JNIEXPORT jfloat JNICALL Java_org_librealsense_Native_rs2DepthFrameGetDistance
  * Signature: (J)Ljava/nio/ByteBuffer;
  */
 JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetFrameData
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2QuerySensors
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2QuerySensors
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2GetSensorsCount
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetSensorsCount
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2DeleteSensorList
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteSensorList
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2DeleteSensor
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteSensor
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2CreateSensor
+ * Signature: (JI)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateSensor
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2GetSensorInfo
+ * Signature: (JI)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_librealsense_Native_rs2GetSensorInfo
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2SupportsSensorInfo
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2SupportsSensorInfo
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2IsSensorExtendableTo
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2IsSensorExtendableTo
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2GetDepthScale
+ * Signature: (J)F
+ */
+JNIEXPORT jfloat JNICALL Java_org_librealsense_Native_rs2GetDepthScale
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2DepthStereoFrameGetBaseline
+ * Signature: (J)F
+ */
+JNIEXPORT jfloat JNICALL Java_org_librealsense_Native_rs2DepthStereoFrameGetBaseline
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2GetStreamProfiles
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetStreamProfiles
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2GetStreamProfileCount
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetStreamProfileCount
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2DeleteStreamProfilesList
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteStreamProfilesList
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2GetStreamProfile
+ * Signature: (JI)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetStreamProfile
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2DeleteStreamProfile
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteStreamProfile
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2GetVideoStreamIntrinsics
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetVideoStreamIntrinsics
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2DeleteIntrinsics
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2DeleteIntrinsics
   (JNIEnv *, jclass, jlong);
 
 #ifdef __cplusplus

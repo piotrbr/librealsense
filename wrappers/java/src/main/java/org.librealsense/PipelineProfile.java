@@ -7,4 +7,8 @@ public class PipelineProfile {
         this.pipelineProfile = pipelineProfile;
     }
 
+    public StreamProfileList getStreams() {
+        return new StreamProfileList(Native.rs2PipelineProfileGetStreams(pipelineProfile));
+
+    }
 }

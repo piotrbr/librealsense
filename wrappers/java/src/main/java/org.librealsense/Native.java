@@ -11,8 +11,6 @@ public class Native {
 
     static {
 
-        System.out.println("here we are now.");
-
         InputStream stream = Native.class.getResourceAsStream("/lib/org.librealsense/windows-x64/native.dll");
 
         try {
@@ -37,7 +35,6 @@ public class Native {
             e.printStackTrace();
         }
 
-        System.out.println("byebye");
 //        ArchLoader.load("realsense2", "/lib/org.librealsense", Native.class);
 //        ArchLoader.load("native", "/lib/org.librealsense", Native.class);
 //        ArchLoader.load(Native.class);
@@ -193,6 +190,7 @@ public class Native {
     public native static int rs2ConfigCanResolve(long config, long pipeline);
 
     public native static long rs2PipelineStartWithConfig(long pipeline, long config);
+    public native static long rs2PipelineProfileGetStreams(long pipelineProfile);
 
     public native static long rs2PipelineWaitForFrames(long pipeline, int timeOut);
     public native static int rs2EmbeddedFramesCount(long frames);
@@ -202,10 +200,29 @@ public class Native {
     public native static int rs2GetFrameWidth(long frame);
     public native static int rs2GetFrameHeight(long frame);
     public native static int rs2GetFrameStrideInBytes(long frame);
-
     public native static float rs2DepthFrameGetDistance(long frame, int x, int y);
-
     public native static ByteBuffer rs2GetFrameData(long frame);
+
+
+    public native static long rs2QuerySensors(long device);
+    public native static int rs2GetSensorsCount(long sensorList);
+    public native static void rs2DeleteSensorList(long sensorList);
+    public native static void rs2DeleteSensor(long sensor);
+    public native static long rs2CreateSensor(long sensorList, int index);
+    public native static String rs2GetSensorInfo(long sensor, int cameraInfo);
+    public native static int rs2SupportsSensorInfo(long sensor, int cameraInfo);
+    public native static int rs2IsSensorExtendableTo(long sensor, int extension);
+    public native static float rs2GetDepthScale(long sensor);
+    public native static float rs2DepthStereoFrameGetBaseline(long frame);
+    public native static long rs2GetStreamProfiles(long sensor);
+    public native static int rs2GetStreamProfileCount(long streamProfileList);
+    public native static void rs2DeleteStreamProfilesList(long streamProfileList);
+
+
+    public native static long rs2GetStreamProfile(long streamProfileList, int index);
+    public native static void rs2DeleteStreamProfile(long streamProfile);
+    public native static long rs2GetVideoStreamIntrinsics(long streamProfile);
+    public native static long rs2DeleteIntrinsics(long intrinsics);
 
 
 
