@@ -11,17 +11,22 @@ public class Native {
 
     static {
 
-        InputStream stream = Native.class.getResourceAsStream("/lib/org.librealsense/windows-x64/native.dll");
+        loadLibrary("/lib/org.librealsense/windows-x64/realsense2.dll", "realsense2.dll");
+        loadLibrary("/lib/org.librealsense/windows-x64/native.dll", "native.dll");
+
+    }
+
+    static void loadLibrary(String resource, String target) {
+        InputStream stream = Native.class.getResourceAsStream(resource);
 
         try {
             File tmpDir = new File(System.getProperty("java.io.tmpdir"));
             File jinectDir = new File(tmpDir, "librealsense-jvm");
             jinectDir.mkdirs();
 
+            File jinectLib = new File(jinectDir, target);
 
-            File jinectLib = new File(jinectDir, "native.dll");
-
-            if (true || !jinectLib.exists()) {
+            if (!jinectLib.exists()) {
                 OutputStream out = new FileOutputStream(jinectLib);
                 byte[] buffer = new byte[1024];
                 int len;
@@ -35,9 +40,6 @@ public class Native {
             e.printStackTrace();
         }
 
-//        ArchLoader.load("realsense2", "/lib/org.librealsense", Native.class);
-//        ArchLoader.load("native", "/lib/org.librealsense", Native.class);
-//        ArchLoader.load(Native.class);
     }
 
     public static int RS2_CAMERA_INFO_NAME = 0;
@@ -50,6 +52,11 @@ public class Native {
     public static int RS2_CAMERA_INFO_USB_TYPE_DESCRIPTOR = 7;
     public static int RS2_CAMERA_INFO_COUNT = 8;
 
+    public static int RS2_DISTORTION_NONE = 0;
+    public static int RS2_DISTORTION_MODIFIED_BROWN_CONRADY = 1;
+    public static int RS2_DISTORTION_INVERSE_BROWN_CONRADY = 2;
+    public static int RS2_FTHETA = 3;
+    public static int RS2_BROWN_CONRADY = 4;
 
     public static enum Stream {
         RS2_STREAM_ANY,
@@ -221,7 +228,7 @@ public class Native {
 
     public native static long rs2GetStreamProfile(long streamProfileList, int index);
     public native static void rs2DeleteStreamProfile(long streamProfile);
-    public native static long rs2GetVideoStreamIntrinsics(long streamProfile);
+    public native static long rs2GetVideoStreamIntrinsics(long streamProfile, Intrinsics intrinsics);
     public native static long rs2DeleteIntrinsics(long intrinsics);
 
 

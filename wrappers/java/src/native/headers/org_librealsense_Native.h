@@ -330,10 +330,10 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteStreamProfile
 /*
  * Class:     org_librealsense_Native
  * Method:    rs2GetVideoStreamIntrinsics
- * Signature: (J)J
+ * Signature: (JLorg/librealsense/Intrinsics;)J
  */
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetVideoStreamIntrinsics
-  (JNIEnv *, jclass, jlong);
+  (JNIEnv *, jclass, jlong, jobject);
 
 /*
  * Class:     org_librealsense_Native

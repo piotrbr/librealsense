@@ -1,6 +1,6 @@
 package org.librealsense;
 
-class StreamProfile {
+public class StreamProfile {
 
     long streamProfile;
 
@@ -9,6 +9,8 @@ class StreamProfile {
     }
 
     public Intrinsics getVideoStreamIntrinsics() {
-        return new Intrinsics(Native.rs2GetVideoStreamIntrinsics(streamProfile));
+        Intrinsics intrinsics = new Intrinsics();
+        Native.rs2GetVideoStreamIntrinsics(streamProfile, intrinsics);
+        return intrinsics;
     }
 }

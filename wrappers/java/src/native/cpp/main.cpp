@@ -304,7 +304,7 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetStreamProfiles
     return (jlong)streamProfileList;
 }
 
-JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetStreamProfilesCount
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetStreamProfileCount
   (JNIEnv *env, jclass, jlong streamProfileListAddr) {
     rs2_error *error = NULL;
 
@@ -337,11 +337,60 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteStreamProfile
   rs2_delete_stream_profile(streamProfile);
  }
 
+
+
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetVideoStreamIntrinsics
-  (JNIEnv *, jclass, jlong streamProfileAddr) {
+  (JNIEnv *env, jclass, jlong streamProfileAddr, jobject obj) {
     rs2_error *error = NULL;
     rs2_stream_profile* streamProfile = (rs2_stream_profile*) streamProfileAddr;
     rs2_intrinsics* intrinsics = (rs2_intrinsics*)malloc(sizeof(rs2_intrinsics));
     rs2_get_video_stream_intrinsics(streamProfile, intrinsics, &error);
+
+
+    jclass jIntrinsics = env->FindClass("org/librealsense/Intrinsics");
+
+    jfieldID jWidth = env->GetFieldID(jIntrinsics, "width", "I");
+    env->SetIntField(obj, jWidth, intrinsics->width);
+
+    jfieldID jHeight = env->GetFieldID(jIntrinsics, "height", "I");
+    env->SetIntField(obj, jHeight, intrinsics->height);
+
+     jfieldID jPpx = env->GetFieldID(jIntrinsics, "ppx", "F");
+     env->SetFloatField(obj, jPpx, intrinsics->ppx);
+
+     jfieldID jPpy = env->GetFieldID(jIntrinsics, "ppy", "F");
+     env->SetFloatField(obj, jPpy, intrinsics->ppy);
+
+     jfieldID jFx = env->GetFieldID(jIntrinsics, "fx", "F");
+     env->SetFloatField(obj, jFx, intrinsics->fx);
+
+     jfieldID jFy = env->GetFieldID(jIntrinsics, "fy", "F");
+     env->SetFloatField(obj, jFy, intrinsics->fy);
+
+     jfieldID jModel = env->GetFieldID(jIntrinsics, "model", "I");
+     env->SetIntField(obj, jModel, static_cast<int> (intrinsics->model));
+
+     jfieldID jCoeffs = env->GetFieldID(jIntrinsics, "coeffs", "[F");
+     jfloatArray jCoeffsArray = (jfloatArray) env->GetObjectField(obj, jCoeffs);
+     jfloat* jCoeffsBody = env->GetFloatArrayElements(jCoeffsArray, 0);
+
+
+        printf("%f %f %f %f %f\n", intrinsics->coeffs[0],intrinsics->coeffs[1],
+        intrinsics->coeffs[2],intrinsics->coeffs[3],intrinsics->coeffs[4]);
+     jCoeffsBody[0] = intrinsics->coeffs[0];
+     jCoeffsBody[1] = intrinsics->coeffs[1];
+     jCoeffsBody[2] = intrinsics->coeffs[2];
+     jCoeffsBody[3] = intrinsics->coeffs[3];
+     jCoeffsBody[4] = intrinsics->coeffs[4];
+
+     env->ReleaseFloatArrayElements(jCoeffsArray, jCoeffsBody, 0);
+
+
+
+
+
+
+
+
     return (jlong)intrinsics;
 }

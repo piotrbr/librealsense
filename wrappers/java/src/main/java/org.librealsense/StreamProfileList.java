@@ -1,10 +1,14 @@
 package org.librealsense;
 
-class StreamProfileList {
+public class StreamProfileList {
 
     long streamProfileList;
     protected StreamProfileList(long streamProfileList) {
         this.streamProfileList = streamProfileList;
+    }
+
+    public int getSize() {
+        return Native.rs2GetStreamProfileCount(streamProfileList);
     }
 
     public StreamProfile get(int index) {
