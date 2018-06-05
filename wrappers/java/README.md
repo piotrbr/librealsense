@@ -1,7 +1,6 @@
 # Java wrapper for librealsense
 
-Work in progress, currently targeting Windows 10.
-
+Work in progress, currently targeting Windows 10. At this point it works well enough to receive depth streams from multiple sensors, but all other use is currently highly untested.
 
 ## Building
 
@@ -9,8 +8,22 @@ Work in progress, currently targeting Windows 10.
 ./gradlew build
 ./gradlew publishToMavenLocal
 ```
-
 Builds with JDK 8, seems to fail with JDK 9.
+
+## Using pre-built binaries
+
+Currently Windows only! Ready to go jar files are hosted on bintray. 
+```groovy
+repositories {
+    maven {
+        url = "https://dl.bintray.com/edwinrndr/librealsense"
+    }
+}
+
+dependencies {
+    compile "org.librealsense:realsense-jvm:2.2.10.4-0"
+}
+```
 
 ## Example use
 
