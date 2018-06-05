@@ -13,7 +13,7 @@ plugins {
 }
 
 
-version = '2.2.10.4-0'
+version = '2.2.10.4-1'
 group = 'org.librealsense'
 
 // Process resources task doesn't get created if there aren't any resources; create a placeholder to ensure that it does.

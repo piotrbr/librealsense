@@ -294,6 +294,14 @@ JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2IsSensorExtendableTo
     return (jint)extendable;
 }
 
+JNIEXPORT jfloat JNICALL Java_org_librealsense_Native_rs2GetDepthScale
+  (JNIEnv *env, jclass, jlong sensorAddr) {
+    rs2_sensor* sensor = (rs2_sensor*) sensorAddr;
+    rs2_error *error = NULL;
+    float depth = rs2_get_depth_scale(sensor, &error);
+    checkErrors(env, error);
+    return (jfloat)depth;
+}
 
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetStreamProfiles
   (JNIEnv *env, jclass, jlong sensorAddr) {

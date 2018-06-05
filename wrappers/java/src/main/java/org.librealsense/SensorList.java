@@ -1,6 +1,6 @@
 package org.librealsense;
 
-class SensorList {
+public class SensorList {
 
     long sensorList;
     protected SensorList(long sensorList) {

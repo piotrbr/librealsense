@@ -26,7 +26,7 @@ public class Native {
 
             File jinectLib = new File(jinectDir, target);
 
-            if (!jinectLib.exists()) {
+            if (true || !jinectLib.exists()) {
                 OutputStream out = new FileOutputStream(jinectLib);
                 byte[] buffer = new byte[1024];
                 int len;
