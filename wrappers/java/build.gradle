@@ -60,7 +60,11 @@ model {
                 lib new JNIDependency(project)
                 cppCompiler.args "-I${project.projectDir}/../../include"
                 linker.args "-L${project.projectDir}/../../"
-                linker.args "-lrealsense2"
+
+                if (targetPlatform.operatingSystem.macOsX) {
+                    cppCompiler.args "-I${project.projectDir}/../../include"
+                    linker.args "${project.projectDir}/../../build/Debug/librealsense2.dylib"
+                }
 
                 if (targetPlatform.operatingSystem.windows) {
 
@@ -78,6 +82,7 @@ model {
 
 //                    linker.args "/LIBPATH:C:/Program Files (x86)/Windows Kits/10/Lib/10.0.10586.0/ucrt/${arch}"
                     cppCompiler.args "-I${project.projectDir}/../../include"
+                    linker.args "-lrealsense2"
                     linker.args "/LIBPATH:${project.projectDir}/../../Debug/"
                     linker.args "realsense2.lib"
 
@@ -111,5 +116,3 @@ model {
         }
     }
 }
-
-
