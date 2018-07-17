@@ -30,8 +30,6 @@ placeholder.deleteOnExit()
 apply plugin: 'maven-publish'
 
 model {
-
-
     platforms {
         ['windows', 'linux', 'osx', 'freebsd-10', 'solaris'].each { os ->
             ['x64'].each { arch ->
@@ -85,7 +83,6 @@ model {
                     linker.args "-lrealsense2"
                     linker.args "/LIBPATH:${project.projectDir}/../../Debug/"
                     linker.args "realsense2.lib"
-
                 }
             }
         }

@@ -22,7 +22,7 @@ public class Native {
         } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
             // TODO: implement unix support
         } else {
-            throw Exception("Operating System not supported!");
+            // Operating System not supported!
         }
     }
 
