@@ -18,6 +18,7 @@ public class Native {
             loadLibrary("/lib/org.librealsense/windows-x64/realsense2.dll", "realsense2.dll");
             loadLibrary("/lib/org.librealsense/windows-x64/native.dll", "native.dll");
         } else if (os.contains("mac")) {
+            loadLibrary("/lib/org.librealsense/osx-x64/librealsense2.dylib", "librealsense2.dylib");
             loadLibrary("/lib/org.librealsense/osx-x64/libnative.dylib", "libnative.dylib");
         } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
             // TODO: implement unix support
