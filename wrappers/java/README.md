@@ -17,6 +17,12 @@ gradle publishToMavenLocal
 ```
 Builds with JDK 8, seems to fail with JDK 9.
 
+Under OSX, the native libraries of realsense are not bundled with the jar. You have to copy all the library files (and soft links) into the following directory:
+
+```
+/librealsense/wrappers/java/src/main/resources/lib/org.librealsense/osx-x64
+```
+
 ## Using pre-built binaries
 
 Currently Windows only! Ready to go jar files are hosted on bintray.
