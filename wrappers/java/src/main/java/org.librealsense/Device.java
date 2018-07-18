@@ -15,4 +15,7 @@ public class Device {
         return new SensorList(Native.rs2QuerySensors(device));
     }
 
+    public long getPtr() {
+        return device;
+    }
 }

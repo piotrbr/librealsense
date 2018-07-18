@@ -26,4 +26,8 @@ public class DeviceList {
         }
         return devices;
     }
+
+    public long getPtr() {
+        return deviceList;
+    }
 }

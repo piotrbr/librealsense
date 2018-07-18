@@ -13,4 +13,8 @@ public class StreamProfile {
         Native.rs2GetVideoStreamIntrinsics(streamProfile, intrinsics);
         return intrinsics;
     }
+
+    public long getPtr() {
+        return streamProfile;
+    }
 }

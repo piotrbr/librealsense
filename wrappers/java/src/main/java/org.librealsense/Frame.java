@@ -37,5 +37,7 @@ public class Frame {
 ////        return Native.rs2
 //    }
 
-
+    public long getPtr() {
+        return frame;
+    }
 }
