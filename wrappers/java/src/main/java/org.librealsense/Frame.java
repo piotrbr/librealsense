@@ -33,9 +33,9 @@ public class Frame {
         return Native.rs2GetFrameStrideInBytes(frame);
     }
 
-//    public float distance(int x, int y) {
-////        return Native.rs2
-//    }
+    public boolean isExtendableTo(Native.Option extension) {
+        return 1 == Native.rs2IsFrameExtendableTo(frame, extension.ordinal());
+    }
 
     public long getPtr() {
         return frame;
