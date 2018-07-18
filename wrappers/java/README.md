@@ -1,18 +1,32 @@
 # Java wrapper for librealsense
 
-Work in progress, currently targeting Windows 10. At this point it works well enough to receive depth streams from multiple sensors, but all other use is currently highly untested.
+Work in progress, currently targeting Windows 10 and Mac OSX. At this point it works well enough to receive depth streams from multiple sensors, but all other use is currently highly untested.
 
 ## Building
 
+First you have to build librealsense itself on your platform.
+
 ```sh
+# windows
 ./gradlew build
 ./gradlew publishToMavenLocal
+
+# osx / unix
+gradle build
+gradle publishToMavenLocal
 ```
 Builds with JDK 8, seems to fail with JDK 9.
 
+Under OSX, the native libraries of realsense are not bundled with the jar. You have to copy all the library files (and soft links) into the following directory:
+
+```
+/librealsense/wrappers/java/src/main/resources/lib/org.librealsense/osx-x64
+```
+
 ## Using pre-built binaries
 
-Currently Windows only! Ready to go jar files are hosted on bintray. 
+Currently Windows only! Ready to go jar files are hosted on bintray.
+
 ```groovy
 repositories {
     maven {
