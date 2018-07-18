@@ -33,7 +33,7 @@ public class Frame {
         return Native.rs2GetFrameStrideInBytes(frame);
     }
 
-    public boolean isExtendableTo(Native.Option extension) {
+    public boolean isExtendableTo(Native.Extension extension) {
         return 1 == Native.rs2IsFrameExtendableTo(frame, extension.ordinal());
     }
 
