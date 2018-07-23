@@ -83,3 +83,4 @@ librealsense-log.txt
 *.ini
 *.cxx
 
+wrappers/java/src/native/headers
