@@ -20,4 +20,8 @@ public class Context {
     public DeviceList queryDevices() {
         return new DeviceList(Native.rs2QueryDevices(context));
     }
+
+    public long getPtr() {
+        return context;
+    }
 }

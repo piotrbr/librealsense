@@ -19,4 +19,7 @@ public class StreamProfileList {
         Native.rs2DeleteStreamProfilesList(streamProfileList);
     }
 
+    public long getPtr() {
+        return streamProfileList;
+    }
 }

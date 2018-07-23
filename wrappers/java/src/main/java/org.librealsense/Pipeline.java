@@ -14,4 +14,8 @@ public class Pipeline {
     public FrameList waitForFrames(int timeout) {
         return new FrameList( Native.rs2PipelineWaitForFrames(pipeline, timeout));
     }
+
+    public long getPtr() {
+        return pipeline;
+    }
 }

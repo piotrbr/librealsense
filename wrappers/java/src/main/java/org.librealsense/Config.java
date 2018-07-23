@@ -18,4 +18,8 @@ public class Config {
     public void enableStream(Native.Stream stream, int index, int width, int height, Native.Format format, int fps) {
         Native.rs2ConfigEnableStream(config, stream.ordinal(), index, width, height, format.ordinal(), fps);
     }
+
+    public long getPtr() {
+        return config;
+    }
 }

@@ -7,6 +7,7 @@ class MotionDeviceIntrinsic {
         this.motionDeviceIntrinsic = motionDeviceIntrinsic;
     }
 
-
-
+    public long getPtr() {
+        return motionDeviceIntrinsic;
+    }
 }

@@ -26,4 +26,8 @@ public class Sensor {
     public float getDepthScale() {
         return Native.rs2GetDepthScale(sensor);
     }
+
+    public long getPtr() {
+        return sensor;
+    }
 }

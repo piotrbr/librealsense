@@ -18,4 +18,8 @@ public class SensorList {
     public Sensor createSensor(int index) {
         return new Sensor(Native.rs2CreateSensor(sensorList, index));
     }
+
+    public long getPtr() {
+        return sensorList;
+    }
 }
