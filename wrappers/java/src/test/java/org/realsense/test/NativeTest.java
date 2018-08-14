@@ -19,28 +19,28 @@ public class NativeTest {
 
         for (int i = 0; i < 1; ++i) {
             long device = Native.rs2CreateDevice(deviceList, i);
-            System.out.println("supports name: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_NAME));
+            System.out.println("supportsInfo name: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_NAME));
             System.out.println("name:" + Native.rs2GetDeviceInfo(device, Native.RS2_CAMERA_INFO_NAME));
 
-            System.out.println("supports serial : " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_SERIAL_NUMBER));
+            System.out.println("supportsInfo serial : " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_SERIAL_NUMBER));
             System.out.println("serial:" + Native.rs2GetDeviceInfo(device, Native.RS2_CAMERA_INFO_SERIAL_NUMBER));
 
-            System.out.println("supports firmware version: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_FIRMWARE_VERSION));
+            System.out.println("supportsInfo firmware version: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_FIRMWARE_VERSION));
             System.out.println("firmware version:" + Native.rs2GetDeviceInfo(device, Native.RS2_CAMERA_INFO_FIRMWARE_VERSION));
 
-            System.out.println("supports phyisical port: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_PHYSICAL_PORT));
+            System.out.println("supportsInfo phyisical port: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_PHYSICAL_PORT));
             System.out.println("physical port:" + Native.rs2GetDeviceInfo(device, Native.RS2_CAMERA_INFO_PHYSICAL_PORT));
 
-            System.out.println("supports debug op code: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_DEBUG_OP_CODE));
+            System.out.println("supportsInfo debug op code: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_DEBUG_OP_CODE));
             System.out.println("debug op code:" + Native.rs2GetDeviceInfo(device, Native.RS2_CAMERA_INFO_DEBUG_OP_CODE));
 
-            System.out.println("supports advanced mode: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_ADVANCED_MODE));
+            System.out.println("supportsInfo advanced mode: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_ADVANCED_MODE));
             System.out.println("advanced mode:" + Native.rs2GetDeviceInfo(device, Native.RS2_CAMERA_INFO_ADVANCED_MODE));
 
-            System.out.println("supports camera locked: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_CAMERA_LOCKED));
+            System.out.println("supportsInfo camera locked: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_CAMERA_LOCKED));
             System.out.println("camera locked:" + Native.rs2GetDeviceInfo(device, Native.RS2_CAMERA_INFO_CAMERA_LOCKED));
 
-            System.out.println("supports usb type descriptor: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_USB_TYPE_DESCRIPTOR));
+            System.out.println("supportsInfo usb type descriptor: " + Native.rs2SupportsDeviceInfo(device, Native.RS2_CAMERA_INFO_USB_TYPE_DESCRIPTOR));
             System.out.println("usb type descriptor:" + Native.rs2GetDeviceInfo(device, Native.RS2_CAMERA_INFO_USB_TYPE_DESCRIPTOR));
         }
 

@@ -1,5 +1,8 @@
 package org.librealsense;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SensorList {
 
     long instance;
@@ -18,5 +21,14 @@ public class SensorList {
 
     public Sensor createSensor(int index) {
         return new Sensor(Native.rs2CreateSensor(instance, index));
+    }
+
+    public List<Sensor> getSensors() {
+        List<Sensor> sensors = new ArrayList<Sensor>();
+        int sensorCount = getSensorCount();
+        for (int i = 0; i < sensorCount; ++i) {
+            sensors.add(createSensor(i));
+        }
+        return sensors;
     }
 }

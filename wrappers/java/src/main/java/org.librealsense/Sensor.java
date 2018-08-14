@@ -26,4 +26,9 @@ public class Sensor {
     public float getDepthScale() {
         return Native.rs2GetDepthScale(instance);
     }
+
+    public boolean supportsInfo(int cameraInfo)
+    {
+        return Native.rs2SupportsSensorInfo(instance,cameraInfo) != 0;
+    }
 }

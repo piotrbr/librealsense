@@ -70,7 +70,7 @@ public class Native {
 
     public native static long rs2CreateContext(int apiVersion);
 
-    public native static long rs2QueryDevices(long contex);
+    public native static long rs2QueryDevices(long context);
 
     public native static int rs2GetDeviceCount(long deviceList);
 

@@ -26,7 +26,6 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateContext
     return (jlong) context;
 }
 
-
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2QueryDevices
   (JNIEnv *env, jclass, jlong contextAddr) {
     rs2_error *error = NULL;
