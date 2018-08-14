@@ -2,9 +2,9 @@ package org.librealsense;
 
 class MotionDeviceIntrinsic {
 
-    long motionDeviceIntrinsic;
+    long instance;
 
-    protected MotionDeviceIntrinsic(long motionDeviceIntrinsic) {
-        this.motionDeviceIntrinsic = motionDeviceIntrinsic;
+    protected MotionDeviceIntrinsic(long instance) {
+        this.instance = instance;
     }
 }

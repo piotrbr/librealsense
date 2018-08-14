@@ -44,25 +44,25 @@ dependencies {
 The following shows to use the bindings from a Kotlin program. (Works from Java perfectly fine too.)
 
 ```kotlin
-val context = Context.create()
-val deviceList = context.queryDevices()
-val devices = deviceList.devices
+val instance = Context.create()
+val instance = instance.queryDevices()
+val devices = instance.devices
 
-val device = devices[0]
-val pipeline = context.createPipeline()
-val config = Config.create()
-config.enableDevice(device)
-config.enableStream(Stream.RS2_STREAM_DEPTH, 0, 640, 480, Format.RS2_FORMAT_Z16, 30)
-pipeline.startWithConfig(config)
+val instance = devices[0]
+val instance = instance.createPipeline()
+val instance = Config.create()
+instance.enableDevice(instance)
+instance.enableStream(Stream.RS2_STREAM_DEPTH, 0, 640, 480, Format.RS2_FORMAT_Z16, 30)
+instance.startWithConfig(instance)
 
 while (true) {
-    val frames = pipeline.waitForFrames(5000)
+    val frames = instance.waitForFrames(5000)
 
     for (i in 0 until frames.frameCount) {
-        val frame = frames.frame(i)
-        val buffer = frame.frameData
+        val instance = frames.instance(i)
+        val buffer = instance.frameData
         // -- use ByteBuffer here
-        frame.release()
+        instance.release()
     }
     frames.release()
 }

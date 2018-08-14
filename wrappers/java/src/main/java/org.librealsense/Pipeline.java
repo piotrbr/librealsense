@@ -2,17 +2,17 @@ package org.librealsense;
 
 public class Pipeline {
 
-    private long pipeline;
+    private long instance;
 
-    protected Pipeline(long pipeline) {
-        this.pipeline = pipeline;
+    protected Pipeline(long instance) {
+        this.instance = instance;
     }
 
     public PipelineProfile startWithConfig(Config config) {
-        return new PipelineProfile(Native.rs2PipelineStartWithConfig(pipeline, config.config));
+        return new PipelineProfile(Native.rs2PipelineStartWithConfig(instance, config.instance));
     }
 
     public FrameList waitForFrames(int timeout) {
-        return new FrameList(Native.rs2PipelineWaitForFrames(pipeline, timeout));
+        return new FrameList(Native.rs2PipelineWaitForFrames(instance, timeout));
     }
 }

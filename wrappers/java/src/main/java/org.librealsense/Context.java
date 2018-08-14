@@ -2,10 +2,10 @@ package org.librealsense;
 
 public class Context {
 
-    private long context;
+    private long instance;
 
-    private Context(long context) {
-        this.context = context;
+    private Context(long instance) {
+        this.instance = instance;
     }
 
     public static Context create() {
@@ -14,11 +14,11 @@ public class Context {
     }
 
     public Pipeline createPipeline() {
-        long pipeline = Native.rs2CreatePipeline(context);
+        long pipeline = Native.rs2CreatePipeline(instance);
         return new Pipeline(pipeline);
     }
 
     public DeviceList queryDevices() {
-        return new DeviceList(Native.rs2QueryDevices(context));
+        return new DeviceList(Native.rs2QueryDevices(instance));
     }
 }

@@ -5,19 +5,19 @@ import java.util.List;
 
 public class DeviceList {
 
-    long deviceList;
+    long instance;
 
-    protected DeviceList(long deviceList) {
-        this.deviceList = deviceList;
+    protected DeviceList(long instance) {
+        this.instance = instance;
     }
 
     public Device createDevice(int index) {
-        long device = Native.rs2CreateDevice(deviceList, index);
+        long device = Native.rs2CreateDevice(instance, index);
         return new Device(device);
     }
 
     public int getDeviceCount() {
-        return Native.rs2GetDeviceCount(deviceList);
+        return Native.rs2GetDeviceCount(instance);
     }
 
     public List<Device> getDevices() {

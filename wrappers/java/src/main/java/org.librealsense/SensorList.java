@@ -2,21 +2,21 @@ package org.librealsense;
 
 public class SensorList {
 
-    long sensorList;
+    long instance;
 
-    protected SensorList(long sensorList) {
-        this.sensorList = sensorList;
+    protected SensorList(long instance) {
+        this.instance = instance;
     }
 
     public int getSensorCount() {
-        return Native.rs2GetSensorsCount(sensorList);
+        return Native.rs2GetSensorsCount(instance);
     }
 
     public void destroy() {
-        Native.rs2DeleteSensorList(sensorList);
+        Native.rs2DeleteSensorList(instance);
     }
 
     public Sensor createSensor(int index) {
-        return new Sensor(Native.rs2CreateSensor(sensorList, index));
+        return new Sensor(Native.rs2CreateSensor(instance, index));
     }
 }

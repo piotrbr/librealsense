@@ -279,7 +279,7 @@ public class Native {
          */
         RS2_OPTION_ACCURACY,
         /**
-         * < Set the number of patterns projected per frame. The higher the accuracy value the more patterns projected. Increasing the number of patterns help to achieve better accuracy. Note that this control is affecting the Depth FPS
+         * < Set the number of patterns projected per instance. The higher the accuracy value the more patterns projected. Increasing the number of patterns help to achieve better accuracy. Note that this control is affecting the Depth FPS
          */
         RS2_OPTION_MOTION_RANGE,
         /**
@@ -287,7 +287,7 @@ public class Native {
          */
         RS2_OPTION_FILTER_OPTION,
         /**
-         * < Set the filter to apply to each depth frame. Each one of the filter is optimized per the application requirements
+         * < Set the filter to apply to each depth instance. Each one of the filter is optimized per the application requirements
          */
         RS2_OPTION_CONFIDENCE_THRESHOLD,
         /**
@@ -299,11 +299,11 @@ public class Native {
          */
         RS2_OPTION_FRAMES_QUEUE_SIZE,
         /**
-         * < Number of frames the user is allowed to keep per stream. Trying to hold-on to more frames will cause frame-drops.
+         * < Number of frames the user is allowed to keep per stream. Trying to hold-on to more frames will cause instance-drops.
          */
         RS2_OPTION_TOTAL_FRAME_DROPS,
         /**
-         * < Total number of detected frame drops from all streams
+         * < Total number of detected instance drops from all streams
          */
         RS2_OPTION_AUTO_EXPOSURE_MODE,
         /**
@@ -327,7 +327,7 @@ public class Native {
          */
         RS2_OPTION_OUTPUT_TRIGGER_ENABLED,
         /**
-         * < Enable / disable trigger to be outputed from the camera to any external device on every depth frame
+         * < Enable / disable trigger to be outputed from the camera to any external device on every depth instance
          */
         RS2_OPTION_MOTION_MODULE_TEMPERATURE,
         /**
@@ -343,7 +343,7 @@ public class Native {
          */
         RS2_OPTION_AUTO_EXPOSURE_PRIORITY,
         /**
-         * < Allows sensor to dynamically ajust the frame rate depending on lighting conditions
+         * < Allows instance to dynamically ajust the instance rate depending on lighting conditions
          */
         RS2_OPTION_COLOR_SCHEME,
         /**
