@@ -3,6 +3,7 @@ package org.librealsense;
 public class StreamProfileList {
 
     long streamProfileList;
+
     protected StreamProfileList(long streamProfileList) {
         this.streamProfileList = streamProfileList;
     }
@@ -17,9 +18,5 @@ public class StreamProfileList {
 
     public void destroy() {
         Native.rs2DeleteStreamProfilesList(streamProfileList);
-    }
-
-    public long getPtr() {
-        return streamProfileList;
     }
 }

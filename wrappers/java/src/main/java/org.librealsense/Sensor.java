@@ -1,8 +1,8 @@
-
 package org.librealsense;
 
 public class Sensor {
     long sensor;
+
     protected Sensor(long sensor) {
         this.sensor = sensor;
     }
@@ -25,9 +25,5 @@ public class Sensor {
 
     public float getDepthScale() {
         return Native.rs2GetDepthScale(sensor);
-    }
-
-    public long getPtr() {
-        return sensor;
     }
 }

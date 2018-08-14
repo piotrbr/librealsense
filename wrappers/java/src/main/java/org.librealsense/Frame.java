@@ -36,8 +36,4 @@ public class Frame {
     public boolean isExtendableTo(Native.Extension extension) {
         return 1 == Native.rs2IsFrameExtendableTo(frame, extension.ordinal());
     }
-
-    public long getPtr() {
-        return frame;
-    }
 }

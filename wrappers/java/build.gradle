@@ -10,10 +10,10 @@ plugins {
     id 'cpp'
     id 'maven-publish'
     id 'org.bven.jniplugin' version '0.0.5'
+    id 'idea'
 }
 
-
-version = '2.12.0-0'
+version = '2.15.0-0'
 group = 'org.librealsense'
 
 // Process resources task doesn't get created if there aren't any resources; create a placeholder to ensure that it does.
@@ -25,7 +25,6 @@ if (!placeholder.exists()) {
     placeholder.createNewFile()
 }
 placeholder.deleteOnExit()
-
 
 apply plugin: 'maven-publish'
 

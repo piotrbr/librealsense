@@ -3,6 +3,7 @@ package org.librealsense;
 public class Context {
 
     private long context;
+
     private Context(long context) {
         this.context = context;
     }
@@ -19,9 +20,5 @@ public class Context {
 
     public DeviceList queryDevices() {
         return new DeviceList(Native.rs2QueryDevices(context));
-    }
-
-    public long getPtr() {
-        return context;
     }
 }

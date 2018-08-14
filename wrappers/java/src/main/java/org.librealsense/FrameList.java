@@ -19,8 +19,4 @@ public class FrameList {
     public void release() {
         Native.rs2ReleaseFrame(frameList);
     }
-
-    public long getPtr() {
-        return frameList;
-    }
 }

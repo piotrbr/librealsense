@@ -1,10 +1,12 @@
 package org.librealsense;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class DeviceList {
 
     long deviceList;
+
     protected DeviceList(long deviceList) {
         this.deviceList = deviceList;
     }
@@ -25,9 +27,5 @@ public class DeviceList {
             devices.add(createDevice(i));
         }
         return devices;
-    }
-
-    public long getPtr() {
-        return deviceList;
     }
 }

@@ -3,6 +3,7 @@ package org.librealsense;
 public class SensorList {
 
     long sensorList;
+
     protected SensorList(long sensorList) {
         this.sensorList = sensorList;
     }
@@ -17,9 +18,5 @@ public class SensorList {
 
     public Sensor createSensor(int index) {
         return new Sensor(Native.rs2CreateSensor(sensorList, index));
-    }
-
-    public long getPtr() {
-        return sensorList;
     }
 }
