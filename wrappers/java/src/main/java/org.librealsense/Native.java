@@ -22,7 +22,7 @@ public class Native {
 
     static {
         // check if development mode
-        boolean isRSDEV = System.getProperty("rsdev").equals("1");
+        boolean isRSDEV = System.getProperty("rsdev") != null && System.getProperty("rsdev").equals("1");
 
         // load native os specific libraries
         String os = System.getProperty("os.name").toLowerCase();
