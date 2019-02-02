@@ -2,6 +2,7 @@ package org.librealsense;
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.file.Paths;
 
 public class Native {
 
@@ -21,25 +22,6 @@ public class Native {
     public static int RS2_BROWN_CONRADY = 4;
 
     static {
-        // check if development mode
-        boolean isRSDEV = System.getProperty("rsdev") != null && System.getProperty("rsdev").equals("1");
-
-        // load native os specific libraries
-        String os = System.getProperty("os.name").toLowerCase();
-
-        if(!isRSDEV) {
-            if (os.contains("win")) {
-                loadLibrary("/lib/org.librealsense/windows-x64/realsense2.dll", "realsense2.dll");
-                loadLibrary("/lib/org.librealsense/windows-x64/native.dll", "native.dll");
-            } else if (os.contains("mac")) {
-                loadLibrary("/lib/org.librealsense/osx-x64/librealsense2.dylib", "librealsense2.dylib");
-                loadLibrary("/lib/org.librealsense/osx-x64/libnative.dylib", "libnative.dylib");
-            } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
-                // TODO: implement unix support
-            } else {
-                // Operating System not supported!
-            }
-        }
     }
 
     static void loadLibrary(String resource, String target) {
@@ -66,6 +48,54 @@ public class Native {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Loads the native libraries for the specific os directly out of the jar file.
+     */
+    public static void loadNativeLibraries() {
+        // check if development mode
+        boolean isRSDEV = System.getProperty("rsdev") != null && System.getProperty("rsdev").equals("1");
+
+        // load native os specific libraries
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if(!isRSDEV) {
+            if (os.contains("win")) {
+                loadLibrary("/lib/org.librealsense/windows-x64/realsense2.dll", "realsense2.dll");
+                loadLibrary("/lib/org.librealsense/windows-x64/native.dll", "native.dll");
+            } else if (os.contains("mac")) {
+                loadLibrary("/lib/org.librealsense/osx-x64/librealsense2.dylib", "librealsense2.dylib");
+                loadLibrary("/lib/org.librealsense/osx-x64/libnative.dylib", "libnative.dylib");
+            } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+                // TODO: implement unix support
+            } else {
+                // Operating System not supported!
+            }
+        }
+    }
+
+    /**
+     * Specify the path to the directory from where to load the native libraries from.
+     * @param libPath Path to the directory where the native realsense lib and wrapper are stored.
+     */
+    public static void loadNativeLibraries(String libPath) {
+        // load native os specific libraries
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.contains("win")) {
+            System.load(Paths.get(libPath, "realsense2.dll").toAbsolutePath().toString());
+            System.load(Paths.get(libPath, "native.dll").toAbsolutePath().toString());
+        } else if (os.contains("mac")) {
+            System.load(Paths.get(libPath, "librealsense2.dylib").toAbsolutePath().toString());
+            System.load(Paths.get(libPath, "libnative.dylib").toAbsolutePath().toString());
+        } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+            System.load(Paths.get(libPath, "librealsense2.so").toAbsolutePath().toString());
+            System.load(Paths.get(libPath, "libnative.so").toAbsolutePath().toString());
+        } else {
+            // Operating System not supported!
+            System.out.println("Your os is not supported. Please load the native libraries yourself!");
+        }
     }
 
     public native static long rs2CreateContext(int apiVersion);

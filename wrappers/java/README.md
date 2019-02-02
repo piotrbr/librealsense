@@ -2,6 +2,8 @@
 
 Work in progress, currently targeting Windows 10 and Mac OSX. At this point it works well enough to receive depth streams from multiple sensors, but all other use is currently highly untested.
 
+Supported Version: `RealSense 2.17.0`
+
 ## Building
 
 First you have to build librealsense itself on your platform.
@@ -9,11 +11,9 @@ First you have to build librealsense itself on your platform.
 ```sh
 # windows
 ./gradlew build
-./gradlew publishToMavenLocal
 
 # osx / unix
 gradle build
-gradle publishToMavenLocal
 ```
 Builds with JDK 8, seems to fail with JDK 9.
 
@@ -44,6 +44,9 @@ dependencies {
 The following shows to use the bindings from a Kotlin program. (Works from Java perfectly fine too.)
 
 ```kotlin
+// load native libraries
+Native.loadNativeLibraries()
+
 val instance = Context.create()
 val instance = instance.queryDevices()
 val devices = instance.devices
