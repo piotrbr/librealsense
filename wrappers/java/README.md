@@ -6,7 +6,7 @@ Supported Version: `RealSense 2.17.0`
 
 ## Building
 
-First you have to build librealsense itself on your platform.
+First you have to build librealsense itself on your platform. Then use [gradle 4.9 or lower](https://github.com/cansik/realsense-processing/issues/2#issuecomment-450195961) to build the native wrapper and the java binary.
 
 ```sh
 # windows
