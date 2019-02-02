@@ -13,7 +13,7 @@ plugins {
     id 'idea'
 }
 
-version = '2.15.0-0'
+version = '2.17.0-0'
 group = 'org.librealsense'
 
 // Process resources task doesn't get created if there aren't any resources; create a placeholder to ensure that it does.
@@ -60,7 +60,7 @@ model {
 
                 if (targetPlatform.operatingSystem.macOsX) {
                     cppCompiler.args "-I${project.projectDir}/../../include"
-                    linker.args "${project.projectDir}/../../build/Debug/librealsense2.dylib"
+                    linker.args "${project.projectDir}/../../build/librealsense2.dylib"
                 }
 
                 if (targetPlatform.operatingSystem.windows) {
