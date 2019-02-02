@@ -21,9 +21,6 @@ public class Native {
     public static int RS2_FTHETA = 3;
     public static int RS2_BROWN_CONRADY = 4;
 
-    static {
-    }
-
     static void loadLibrary(String resource, String target) {
         InputStream stream = Native.class.getResourceAsStream(resource);
 
