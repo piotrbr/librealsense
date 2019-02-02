@@ -444,7 +444,7 @@ namespace librealsense
                     for (auto&& output : unpacker.outputs)
                     {
                         LOG_DEBUG("FrameAccepted," << librealsense::get_string(output.stream_desc.type) << "," << std::dec << frame_counter
-                            << output.stream_desc.index << "," << frame_counter
+                            << "," << output.stream_desc.index << "," << frame_counter
                             << ",Arrived," << std::fixed << f.backend_time << " " << std::fixed << system_time<<" diff - "<< system_time- f.backend_time << " "
                             << ",TS," << std::fixed << timestamp << ",TS_Domain," << rs2_timestamp_domain_to_string(timestamp_domain)
                             <<" last_frame_number "<< last_frame_number<<" last_timestamp "<< last_timestamp);
@@ -468,7 +468,8 @@ namespace librealsense
                             (const uint8_t*)f.metadata,
                             f.backend_time,
                             last_timestamp,
-                            last_frame_number);
+                            last_frame_number,
+                            false);
 
                         last_frame_number = frame_counter;
                         last_timestamp = timestamp;

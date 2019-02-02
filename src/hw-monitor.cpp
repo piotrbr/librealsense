@@ -12,21 +12,21 @@ namespace librealsense
     {
         auto preHeaderData = IVCAM_MONITOR_MAGIC_NUMBER;
 
-        auto writePtr = bufferToSend;
+        uint8_t* writePtr = bufferToSend;
         auto header_size = 4;
 
         auto cur_index = 2;
-        *(reinterpret_cast<uint16_t *>(writePtr + cur_index)) = preHeaderData;
+        memcpy(writePtr + cur_index, &preHeaderData, sizeof(uint16_t));
         cur_index += sizeof(uint16_t);
-        *(reinterpret_cast<uint32_t *>(writePtr + cur_index)) = opCodeNumber;
+        memcpy(writePtr + cur_index, &opCodeNumber, sizeof(uint32_t));
         cur_index += sizeof(uint32_t);
-        *(reinterpret_cast<uint32_t *>(writePtr + cur_index)) = p1;
+        memcpy(writePtr + cur_index, &p1, sizeof(uint32_t));
         cur_index += sizeof(uint32_t);
-        *(reinterpret_cast<uint32_t *>(writePtr + cur_index)) = p2;
+        memcpy(writePtr + cur_index, &p2, sizeof(uint32_t));
         cur_index += sizeof(uint32_t);
-        *(reinterpret_cast<uint32_t *>(writePtr + cur_index)) = p3;
+        memcpy(writePtr + cur_index, &p3, sizeof(uint32_t));
         cur_index += sizeof(uint32_t);
-        *(reinterpret_cast<uint32_t *>(writePtr + cur_index)) = p4;
+        memcpy(writePtr + cur_index, &p4, sizeof(uint32_t));
         cur_index += sizeof(uint32_t);
 
         if (dataLength)
@@ -36,7 +36,8 @@ namespace librealsense
         }
 
         length = cur_index;
-        *(reinterpret_cast<uint16_t *>(bufferToSend)) = static_cast<uint16_t>(length - header_size); // Length doesn't include header
+        uint16_t tmp_size = length - header_size;
+        memcpy(bufferToSend, &tmp_size, sizeof(uint16_t)); // Length doesn't include header
     }
 
 
@@ -155,20 +156,17 @@ namespace librealsense
             << "." << static_cast<int>(fws[1]) << "." << static_cast<int>(fws[0]);
     }
 
-    std::string hw_monitor::get_module_serial_string(uint8_t gvd_cmd, uint32_t offset) const
+    std::string hw_monitor::get_module_serial_string(uint8_t gvd_cmd, uint32_t offset, int size) const
     {
         std::vector<unsigned char> gvd(HW_MONITOR_BUFFER_SIZE);
         get_gvd(gvd.size(), gvd.data(), gvd_cmd);
         unsigned char ss[8];
         librealsense::copy(ss, gvd.data() + offset, 8);
         std::stringstream formattedBuffer;
-        formattedBuffer << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(ss[0]) <<
-            std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(ss[1]) <<
-            std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(ss[2]) <<
-            std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(ss[3]) <<
-            std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(ss[4]) <<
-            std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(ss[5]);
-
+        for (auto i = 0;i < size;i++)
+        {
+            formattedBuffer << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(ss[i]);
+        }
         return formattedBuffer.str();
     }
 

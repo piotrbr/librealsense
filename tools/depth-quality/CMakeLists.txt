@@ -48,6 +48,8 @@ endif()
             ../../third-party/imgui/imgui_impl_glfw.cpp
             ../../third-party/imgui/imgui-fonts-karla.hpp
             ../../third-party/imgui/imgui-fonts-fontawesome.hpp
+            ../../common/ux-alignment.cpp
+            ../../common/ux-alignment.h
         )
 
     if(WIN32)
@@ -102,6 +104,6 @@ endif()
         rs-depth-quality
 
         RUNTIME DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/bin
+        ${CMAKE_INSTALL_BINDIR}
     )
 endif()

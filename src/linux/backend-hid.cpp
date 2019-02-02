@@ -187,7 +187,15 @@ namespace librealsense
 
         hid_custom_sensor::~hid_custom_sensor()
         {
-            stop_capture();
+            try
+            {
+                if (_is_capturing)
+                    stop_capture();
+            }
+            catch(...)
+            {
+                LOG_ERROR("An error has occurred while hid_custom_sensor dtor()!");
+            }
         }
 
         std::vector<uint8_t> hid_custom_sensor::get_report_data(const std::string& report_name, custom_sensor_report_field report_field)
@@ -325,7 +333,10 @@ namespace librealsense
         void hid_custom_sensor::stop_capture()
         {
             if (!_is_capturing)
+            {
+                enable(false);
                 return;
+            }
 
             _is_capturing = false;
             signal_stop();
@@ -350,9 +361,6 @@ namespace librealsense
             auto fd = open(name_report_path.c_str(), O_RDONLY | O_NONBLOCK);
             if (fd < 0)
                 throw linux_backend_exception("Failed to open report!");
-
-            if (!_is_capturing)
-                enable(true);
 
             std::vector<uint8_t> buffer;
             buffer.resize(MAX_INPUT);
@@ -424,6 +432,17 @@ namespace librealsense
             }
             custom_device_file << input_data;
             custom_device_file.close();
+
+            // Work-around for the HID custom driver failing to release resources,
+            // preventing the device to enter idle U3 mode
+            // reading out the value will refresh the device tree in kernel
+//            if (!state)
+//            {
+//                std::string feat_val("default");
+//                if(!(std::ifstream(_custom_device_path + "/feature-0-200309/feature-0-200309-value") >> feat_val))
+//                    throw linux_backend_exception("Failed to read feat_val");
+//                std::cout << "Feat value is " << feat_val << std::endl;
+//            }
         }
 
         void hid_custom_sensor::signal_stop()
@@ -450,10 +469,14 @@ namespace librealsense
 
         iio_hid_sensor::~iio_hid_sensor()
         {
-            write_integer_to_param("buffer/enable", 0);
-            stop_capture();
+            try
+            {
+                write_integer_to_param("buffer/enable", 0);
+                stop_capture();
 
-            clear_buffer();
+                clear_buffer();
+            }
+            catch(...){}
 
             // clear inputs.
             _inputs.clear();
@@ -895,7 +918,7 @@ namespace librealsense
         void v4l_hid_device::open(const std::vector<hid_profile>& hid_profiles)
         {
             _hid_profiles = hid_profiles;
-            for (auto& device_info : _hid_device_infos)
+             for (auto& device_info : _hid_device_infos)
              {
                 try
                 {
@@ -1101,7 +1124,7 @@ namespace librealsense
                         LOG_WARNING("Failed to read busnum/devnum. Device Path: " << elem);
                     }
 #else
-                    LOG_WARNING("Failed to read busnum/devnum. Device Path: " << elem);
+                    LOG_INFO("Failed to read busnum/devnum. Device Path: " << elem);
 #endif
                     continue;
                 }

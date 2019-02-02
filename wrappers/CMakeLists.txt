@@ -32,6 +32,10 @@ if (BUILD_CV_EXAMPLES)
   add_subdirectory(opencv)
 endif()
 
+if(BUILD_MATLAB_BINDINGS)
+    add_subdirectory(matlab)
+endif()
+
 if (BUILD_PCL_EXAMPLES)
   add_subdirectory(pcl)
 endif()
@@ -63,4 +67,7 @@ if(BUILD_CSHARP_BINDINGS)
     add_subdirectory(csharp)
 endif()
 
+if(BUILD_OPENNI2_BINDINGS)
+	add_subdirectory(openni2)
+endif()
 

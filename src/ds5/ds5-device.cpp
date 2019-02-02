@@ -24,45 +24,41 @@
 
 namespace librealsense
 {
-    class ds5_auto_exposure_roi_method : public region_of_interest_method
+    ds5_auto_exposure_roi_method::ds5_auto_exposure_roi_method(
+        const hw_monitor& hwm,
+        ds::fw_cmd cmd)
+        : _hw_monitor(hwm), _cmd(cmd) {}
+
+    void ds5_auto_exposure_roi_method::set(const region_of_interest& roi)
     {
-    public:
-        explicit ds5_auto_exposure_roi_method(const hw_monitor& hwm) : _hw_monitor(hwm) {}
+        command cmd(_cmd);
+        cmd.param1 = roi.min_y;
+        cmd.param2 = roi.max_y;
+        cmd.param3 = roi.min_x;
+        cmd.param4 = roi.max_x;
+        _hw_monitor.send(cmd);
+    }
 
-        void set(const region_of_interest& roi) override
+    region_of_interest ds5_auto_exposure_roi_method::get() const
+    {
+        region_of_interest roi;
+        command cmd(_cmd + 1);
+        auto res = _hw_monitor.send(cmd);
+
+        if (res.size() < 4 * sizeof(uint16_t))
         {
-            command cmd(ds::SETAEROI);
-            cmd.param1 = roi.min_y;
-            cmd.param2 = roi.max_y;
-            cmd.param3 = roi.min_x;
-            cmd.param4 = roi.max_x;
-            _hw_monitor.send(cmd);
+            throw std::runtime_error("Invalid result size!");
         }
 
-        region_of_interest get() const override
-        {
-            region_of_interest roi;
-            command cmd(ds::GETAEROI);
-            auto res = _hw_monitor.send(cmd);
+        auto words = reinterpret_cast<uint16_t*>(res.data());
 
-            if (res.size() < 4 * sizeof(uint16_t))
-            {
-                throw std::runtime_error("Invalid result size!");
-            }
+        roi.min_y = words[0];
+        roi.max_y = words[1];
+        roi.min_x = words[2];
+        roi.max_x = words[3];
 
-            auto words = reinterpret_cast<uint16_t*>(res.data());
-
-            roi.min_y = words[0];
-            roi.max_y = words[1];
-            roi.min_x = words[2];
-            roi.max_x = words[3];
-
-            return roi;
-        }
-
-    private:
-        const hw_monitor& _hw_monitor;
-    };
+        return roi;
+    }
 
     std::vector<uint8_t> ds5_device::send_receive_raw_data(const std::vector<uint8_t>& input)
     {
@@ -172,6 +168,8 @@ namespace librealsense
 
         float get_depth_scale() const override { return _depth_units; }
 
+        void set_depth_scale(float val){ _depth_units = val; }
+
         float get_stereo_baseline_mm() const override { return _owner->get_stereo_baseline_mm(); }
 
         void create_snapshot(std::shared_ptr<depth_sensor>& snapshot) const
@@ -195,7 +193,7 @@ namespace librealsense
         }
     protected:
         const ds5_device* _owner;
-        float _depth_units;
+        std::atomic<float> _depth_units;
         float _stereo_baseline_mm;
     };
 
@@ -278,6 +276,26 @@ namespace librealsense
         return _hw_monitor->send(cmd);
     }
 
+    ds::d400_caps ds5_device::parse_device_capabilities() const
+    {
+        using namespace ds;
+        std::array<unsigned char,HW_MONITOR_BUFFER_SIZE> gvd_buf;
+        _hw_monitor->get_gvd(gvd_buf.size(), gvd_buf.data(), GVD);
+
+        // Opaque retrieval
+        d400_caps val{d400_caps::CAP_UNDEFINED};
+        if (gvd_buf[active_projector])  // DepthActiveMode
+            val |= d400_caps::CAP_ACTIVE_PROJECTOR;
+        if (gvd_buf[rgb_sensor])                           // WithRGB
+            val |= d400_caps::CAP_RGB_SENSOR;
+        if (gvd_buf[imu_sensor])
+            val |= d400_caps::CAP_IMU_SENSOR;
+        if (0xFF != (gvd_buf[fisheye_sensor_lb] & gvd_buf[fisheye_sensor_hb]))
+            val |= d400_caps::CAP_FISHEYE_SENSOR;
+
+        return val;
+    }
+
     std::shared_ptr<uvc_sensor> ds5_device::create_depth_device(std::shared_ptr<context> ctx,
                                                                 const std::vector<platform::uvc_device_info>& all_device_infos)
     {
@@ -288,7 +306,6 @@ namespace librealsense
         std::vector<std::shared_ptr<platform::uvc_device>> depth_devices;
         for (auto&& info : filter_by_mi(all_device_infos, 0)) // Filter just mi=0, DEPTH
             depth_devices.push_back(backend.create_uvc_device(info));
-
 
         std::unique_ptr<frame_timestamp_reader> ds5_timestamp_reader_backup(new ds5_timestamp_reader(backend.create_time_service()));
         auto depth_ep = std::make_shared<ds5_depth_sensor>(this, std::make_shared<platform::multi_pins_uvc_device>(depth_devices),
@@ -308,6 +325,7 @@ namespace librealsense
           _depth_stream(new stream(RS2_STREAM_DEPTH)),
           _left_ir_stream(new stream(RS2_STREAM_INFRARED, 1)),
           _right_ir_stream(new stream(RS2_STREAM_INFRARED, 2)),
+          _device_capabilities(ds::d400_caps::CAP_UNDEFINED),
           _depth_device_idx(add_sensor(create_depth_device(ctx, group.uvc_devices)))
     {
         init(ctx, group);
@@ -354,9 +372,12 @@ namespace librealsense
 
         _coefficients_table_raw = [this]() { return get_raw_calibration_table(coefficients_table_id); };
 
-        std::string device_name = (rs400_sku_names.end() != rs400_sku_names.find(group.uvc_devices.front().pid)) ? rs400_sku_names.at(group.uvc_devices.front().pid) : "RS4xx";
+        auto pid = group.uvc_devices.front().pid;
+        std::string device_name = (rs400_sku_names.end() != rs400_sku_names.find(pid)) ? rs400_sku_names.at(pid) : "RS4xx";
         _fw_version = firmware_version(_hw_monitor->get_firmware_version_string(GVD, camera_fw_version_offset));
-        recommended_fw_version = firmware_version("5.9.14.0");
+        _recommended_fw_version = firmware_version("5.10.3.0");
+        if (_fw_version >= firmware_version("5.10.4.0"))
+            _device_capabilities = parse_device_capabilities();
         auto serial = _hw_monitor->get_module_serial_string(GVD, module_serial_offset);
 
         auto& depth_ep = get_depth_sensor();
@@ -381,7 +402,6 @@ namespace librealsense
             depth_ep.register_pixel_format(pf_y12i); // L+R - Calibration not rectified
         }
 
-        auto pid = group.uvc_devices.front().pid;
         auto pid_hex_str = hexify(pid >> 8) + hexify(static_cast<uint8_t>(pid));
 
         std::string is_camera_locked{ "" };
@@ -391,8 +411,9 @@ namespace librealsense
             is_camera_locked = (is_locked) ? "YES" : "NO";
 
 #ifdef HWM_OVER_XU
-            //if hw_monitor was created by usb replace it xu
-            if (group.usb_devices.size() > 0)
+            //if hw_monitor was created by usb replace it with xu
+            // D400_IMU will remain using USB interface due to HW limitations
+            if ((group.usb_devices.size() > 0) && (RS400_IMU_PID != pid))
             {
                 _hw_monitor = std::make_shared<hw_monitor>(
                     std::make_shared<locked_transfer>(
@@ -401,6 +422,7 @@ namespace librealsense
                         get_depth_sensor()));
             }
 #endif
+
             depth_ep.register_pu(RS2_OPTION_GAIN);
             auto exposure_option = std::make_shared<uvc_xu_option<uint32_t>>(depth_ep,
                 depth_xu,
@@ -433,7 +455,6 @@ namespace librealsense
                 new polling_error_handler(1000,
                     std::move(error_control),
                     depth_ep.get_notifications_processor(),
-
                     std::unique_ptr<notification_decoder>(new ds5_notification_decoder())));
 
             depth_ep.register_option(RS2_OPTION_ERROR_POLLING_ENABLED, std::make_shared<polling_errors_disable>(_polling_error_handler.get()));
@@ -457,7 +478,18 @@ namespace librealsense
             lazy<float>([this]() { return get_stereo_baseline_mm(); })));
 
         if (advanced_mode && _fw_version >= firmware_version("5.6.3.0"))
-            depth_ep.register_option(RS2_OPTION_DEPTH_UNITS, std::make_shared<depth_scale_option>(*_hw_monitor));
+        {
+            auto depth_scale = std::make_shared<depth_scale_option>(*_hw_monitor);
+            auto depth_sensor = As<ds5_depth_sensor, uvc_sensor>(&depth_ep);
+            assert(depth_sensor);
+
+            depth_scale->add_observer([depth_sensor](float val)
+            {
+                depth_sensor->set_depth_scale(val);
+            });
+
+            depth_ep.register_option(RS2_OPTION_DEPTH_UNITS, depth_scale);
+        }
         else
             depth_ep.register_option(RS2_OPTION_DEPTH_UNITS, std::make_shared<const_value_option>("Number of meters represented by a single depth unit",
                 lazy<float>([]() { return 0.001f; })));
@@ -506,7 +538,7 @@ namespace librealsense
         depth_ep.register_metadata((rs2_frame_metadata_value)RS2_FRAME_METADATA_WIDTH, make_attribute_parser(&md_configuration::width, md_configuration_attributes::width_attribute, md_prop_offset));
         depth_ep.register_metadata((rs2_frame_metadata_value)RS2_FRAME_METADATA_HEIGHT, make_attribute_parser(&md_configuration::height, md_configuration_attributes::height_attribute, md_prop_offset));
         depth_ep.register_metadata((rs2_frame_metadata_value)RS2_FRAME_METADATA_ACTUAL_FPS,  std::make_shared<ds5_md_attribute_actual_fps> ());
-        
+
         register_info(RS2_CAMERA_INFO_NAME, device_name);
         register_info(RS2_CAMERA_INFO_SERIAL_NUMBER, serial);
         register_info(RS2_CAMERA_INFO_FIRMWARE_VERSION, _fw_version);
@@ -514,15 +546,15 @@ namespace librealsense
         register_info(RS2_CAMERA_INFO_DEBUG_OP_CODE, std::to_string(static_cast<int>(fw_cmd::GLD)));
         register_info(RS2_CAMERA_INFO_ADVANCED_MODE, ((advanced_mode) ? "YES" : "NO"));
         register_info(RS2_CAMERA_INFO_PRODUCT_ID, pid_hex_str);
-        register_info(RS2_CAMERA_INFO_RECOMMENDED_FIRMWARE_VERSION, recommended_fw_version);
+        register_info(RS2_CAMERA_INFO_RECOMMENDED_FIRMWARE_VERSION, _recommended_fw_version);
 
         if (usb_modality)
             register_info(RS2_CAMERA_INFO_USB_TYPE_DESCRIPTOR, usb_type_str);
 
         std::string curr_version= _fw_version;
-        std::string minimal_version = recommended_fw_version;
+        std::string minimal_version = _recommended_fw_version;
 
-        if (_fw_version < recommended_fw_version)
+        if (_fw_version < _recommended_fw_version)
         {
             std::weak_ptr<notifications_processor> weak = depth_ep.get_notifications_processor();
             std::thread notification_thread = std::thread([weak, curr_version, minimal_version]()

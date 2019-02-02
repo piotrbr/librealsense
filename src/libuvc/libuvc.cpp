@@ -30,15 +30,12 @@
 #include <sys/stat.h>
 #include <regex>
 #include <list>
+#include <unordered_map>
 
 #include <signal.h>
 
 #include "libuvc.h"
 #include "libuvc_internal.h"
-
-#pragma GCC diagnostic ignored "-Wpedantic"
-#include "../third-party/libusb/libusb/libusb.h"
-#pragma GCC diagnostic pop
 
 #pragma GCC diagnostic ignored "-Woverflow"
 
@@ -53,6 +50,13 @@ namespace librealsense
 {
     namespace platform
     {
+        // the table provides the substitution 4CC used when firmware-published formats
+        // differ from the recognized scheme
+        const std::unordered_map<uint32_t, uint32_t> fourcc_map = {
+            { 0x32000000, 0x47524559 },    /* 'GREY' from 'L8  ' */
+            { 0x52415738, 0x47524559 },    /* 'GREY' from 'RAW8' */
+        };
+
         static void internal_uvc_callback(uvc_frame_t *frame, void *ptr);
 
         static std::tuple<std::string,uint16_t>  get_usb_descriptors(libusb_device* usb_device)
@@ -297,6 +301,10 @@ namespace librealsense
                 uvc_error_t res;
                 uvc_stream_ctrl_t ctrl;
 
+                // Assume that the base and the substituted codes do not co-exist
+                if (_substitute_4cc.count(profile.format))
+                    profile.format = _substitute_4cc.at(profile.format);
+
                 // request all formats for all pins in the device.
                 res = uvc_get_stream_ctrl_format_size_all(
                         _device_handle, &ctrl,
@@ -356,6 +364,11 @@ namespace librealsense
                     _is_capturing = false;
                     _is_started = false;
                 }
+                uvc_stop_streaming(_device_handle);
+                _stream_ctrls.clear();
+                _profiles.clear();
+                _callbacks.clear();
+                
             }
 
             void power_D0() {
@@ -398,16 +411,15 @@ namespace librealsense
             }
 
             void power_D3() {
-
-              uvc_unref_device(_device);
+                uvc_unref_device(_device);
                 //uvc_stop_streaming(_device_handle);
-                _profiles.clear();
+                //_profiles.clear();
                 uvc_close(_device_handle);
                 _device = NULL;
                 _device_handle = NULL;
                 _real_state = D3;
             }
-            
+
             void set_power_state(power_state state) override {
                 std::lock_guard<std::mutex> lock(_power_mutex);
 
@@ -424,7 +436,6 @@ namespace librealsense
                 else {
                     // we have been asked to close the device. queue the request for several seconds
                     // just in case a quick turn on come right over.
-
                     _state_change_time = std::clock();
                 }
 
@@ -580,12 +591,92 @@ namespace librealsense
                     throw std::runtime_error("insufficient data writen to USB");
             }
 
+            // Translate between UVC Spec and RS
+            int32_t rs2_value_translate(uvc_req_code action, rs2_option option, int32_t value) const
+            {
+                // Value may be translated according to action/option value
+                int32_t translated_value = value;
+                
+                switch (action)
+                {
+                    case UVC_GET_CUR: // Translating from UVC 1.5 Spec up to RS
+                        if (option == RS2_OPTION_ENABLE_AUTO_EXPOSURE)
+                        {
+                            switch (value)
+                            {
+                                case UVC_AE_MODE_D3_AP:
+                                    translated_value = 1;
+                                    break;
+                                case UVC_AE_MODE_D0_MANUAL:
+                                    translated_value = 0;
+                                    break;
+                                default:
+                                    throw std::runtime_error("Unsupported GET value for RS2_OPTION_ENABLE_AUTO_EXPOSURE");
+                            }
+                        }
+                        break;
+                        
+                    case UVC_SET_CUR: // Translating from RS down to UVC 1.5 Spec
+                        if (option == RS2_OPTION_ENABLE_AUTO_EXPOSURE)
+                        {
+                            switch (value)
+                            {
+                                case 1:
+                                    // Enabling auto exposure
+                                    translated_value = UVC_AE_MODE_D3_AP;
+                                    break;
+                                case 0:
+                                    // Disabling auto exposure
+                                    translated_value = UVC_AE_MODE_D0_MANUAL;
+                                    break;
+                                default:
+                                    throw std::runtime_error("Unsupported SET value for RS2_OPTION_ENABLE_AUTO_EXPOSURE");
+                            }
+                        }
+                        break;
+                        
+                    case UVC_GET_MIN:
+                        if (option == RS2_OPTION_ENABLE_AUTO_EXPOSURE)
+                        {
+                            translated_value = 0; // Hardcoded MIN value
+                        }
+                        break;
+                        
+                    case UVC_GET_MAX:
+                        if (option == RS2_OPTION_ENABLE_AUTO_EXPOSURE)
+                        {
+                            translated_value = 1; // Hardcoded MAX value
+                        }
+                        break;
+                        
+                    case UVC_GET_RES:
+                        if (option == RS2_OPTION_ENABLE_AUTO_EXPOSURE)
+                        {
+                            translated_value = 1; // Hardcoded RES (step) value
+                        }
+                        break;
+                        
+                    case UVC_GET_DEF:
+                        if (option == RS2_OPTION_ENABLE_AUTO_EXPOSURE)
+                        {
+                            translated_value = 1; // Hardcoded DEF value
+                        }
+                        break;
+                        
+                    default:
+                        throw std::runtime_error("Unsupported action translation");
+                }
+                return translated_value;
+            }
+
+            
             bool get_pu(rs2_option opt, int32_t& value) const override
             {
                 int unit;
                 int control = rs2_option_to_ctrl_selector(opt, unit);
 
                 value = get_data_usb( UVC_GET_CUR, control, unit);
+                value = rs2_value_translate(UVC_GET_CUR, opt, value);
                 return true;
             }
 
@@ -594,6 +685,7 @@ namespace librealsense
                 int unit;
                 int control = rs2_option_to_ctrl_selector(opt, unit);
 
+                value = rs2_value_translate(UVC_SET_CUR, opt, value);
                 set_data_usb( UVC_SET_CUR, control, unit, value);
                 return true;
             }
@@ -602,10 +694,18 @@ namespace librealsense
             {
                 int unit;
                 int control = rs2_option_to_ctrl_selector(option, unit);
+                
                 int min = get_data_usb( UVC_GET_MIN, control, unit);
+                min = rs2_value_translate(UVC_GET_MIN, option, value);
+                
                 int max = get_data_usb( UVC_GET_MAX, control, unit);
+                max = rs2_value_translate(UVC_GET_MAX, option, value);
+                
                 int step = get_data_usb( UVC_GET_RES, control, unit);
+                step = rs2_value_translate(UVC_GET_RES, option, value);
+                
                 int def = get_data_usb( UVC_GET_DEF, control, unit);
+                def = rs2_value_translate(UVC_GET_DEF, option, value);
 
                 control_range result(min, max, step, def);
 
@@ -629,8 +729,16 @@ namespace librealsense
                 uvc_format_t *cur_format = formats;
               // build a list of all stream profiles and return to the caller.
                 while ( cur_format != NULL) {
+                    // Substitude HW profiles with 4CC codes recognized by the core
+                    uint32_t device_fourcc = cur_format->fourcc;
+                    if (fourcc_map.count(device_fourcc))
+                    {
+                        _substitute_4cc[fourcc_map.at(device_fourcc)] = device_fourcc;
+                        device_fourcc = fourcc_map.at(device_fourcc);
+                    }
+
                     stream_profile p{};
-                    p.format = cur_format->fourcc;
+                    p.format = device_fourcc;
                     p.fps = cur_format->fps;
                     p.width = cur_format->width;
                     p.height = cur_format->height;
@@ -706,6 +814,7 @@ namespace librealsense
             std::vector<stream_profile> _profiles;
             std::vector<frame_callback> _callbacks;
             std::vector<uvc_stream_ctrl_t> _stream_ctrls;
+            mutable std::unordered_map<uint32_t, uint32_t> _substitute_4cc;
             std::atomic<bool> _is_capturing;
             std::atomic<bool> _is_alive;
             std::atomic<bool> _is_started;

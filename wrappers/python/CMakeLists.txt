@@ -28,26 +28,51 @@ set_target_properties(pyrealsense2 PROPERTIES VERSION
         ${REALSENSE_VERSION_STRING} SOVERSION ${REALSENSE_VERSION_MAJOR})
 set_target_properties(pyrealsense2 PROPERTIES FOLDER Wrappers/python)
 install(TARGETS pyrealsense2 EXPORT realsense2Targets
+		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
-set(RAW_RS_CPP ../../src/backend.cpp ../../src/win/win-helpers.cpp ../../src/win/win-uvc.cpp pybackend_extras.cpp pybackend.cpp
-           ../../src/win/win-usb.cpp ../../src/win/win-backend.cpp ../../src/linux/backend-v4l2.cpp ../../src/linux/backend-hid.cpp ../../src/types.cpp
-           ../../src/win/win-hid.cpp ../../src/archive.cpp ../../src/log.cpp ../../src/types.cpp ../../third-party/easyloggingpp/src/easylogging++.cc)
-set(RAW_RS_HPP ../../src/backend.h ../../src/win/win-helpers.h ../../src/win/win-uvc.h ../../src/linux/backend-v4l2.h ../../src/linux/backend-hid.h
-           ../../src/win/win-usb.h ../../src/win/win-hid.h ../../src/win/win-backend.h ../../src/archive.h pybackend_extras.h
+set(RAW_RS_CPP ../../src/backend.cpp pybackend_extras.cpp pybackend.cpp
+           ../../src/linux/backend-v4l2.cpp ../../src/linux/backend-hid.cpp ../../src/types.cpp
+           ../../src/archive.cpp ../../src/log.cpp ../../src/types.cpp ../../third-party/easyloggingpp/src/easylogging++.cc)
+set(RAW_RS_HPP ../../src/backend.h ../../src/linux/backend-v4l2.h ../../src/linux/backend-hid.h
+           ../../src/archive.h pybackend_extras.h
            ../../src/types.h ../../third-party/easyloggingpp/src/easylogging++.h)
 
+if( (${CMAKE_SYSTEM_VERSION} EQUAL 6.1) OR (FORCE_WINUSB_UVC) ) # Windows 7
+    list(APPEND RAW_RS_CPP
+        ../../src/win7/win7-helpers.cpp
+        ../../src/win7/win7-uvc.cpp
+        ../../src/win7/win7-usb.cpp
+        ../../src/win7/win7-hid.cpp
+        ../../src/win7/win7-backend.cpp
+        ../../src/win7/winusb_uvc/winusb_uvc.cpp
+        )
+else() # Some other windows version
+    list(APPEND RAW_RS_CPP
+        ../../src/win/win-helpers.cpp
+        ../../src/win/win-uvc.cpp
+        ../../src/win/win-usb.cpp
+        ../../src/win/win-hid.cpp
+        ../../src/win/win-backend.cpp
+        )
+endif()
+
 pybind11_add_module(pybackend2 SHARED ${RAW_RS_CPP} ${RAW_RS_HPP})
+if(USE_EXTERNAL_USB)
+    add_dependencies(pybackend2 libusb)
+endif()
 target_link_libraries(pybackend2 PRIVATE ${LIBUSB1_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 set_target_properties(pybackend2 PROPERTIES
                         VERSION     ${REALSENSE_VERSION_STRING}
                         SOVERSION   ${REALSENSE_VERSION_MAJOR})
 set_target_properties(pybackend2 PROPERTIES FOLDER Wrappers/python)
 include_directories(pybackend2 ../../include)
+
 install(TARGETS pybackend2
         EXPORT realsense2Targets
+		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )

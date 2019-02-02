@@ -75,7 +75,7 @@ namespace librealsense
                 if (_type == *type)
                 {
                     const rs2_metadata_type* value = reinterpret_cast<const rs2_metadata_type*>(pos);
-                    result = *value;
+                    memcpy((void*)&result, (const void*)value, sizeof(*value));
                     return true;
                 }
                 pos += sizeof(rs2_metadata_type);
@@ -147,9 +147,10 @@ namespace librealsense
                 if ((s->header.md_type_id != expected_type) || (s->header.md_size !=sizeof(*s)))
                 {
                     std::string type = (md_type_desc.count(s->header.md_type_id) > 0) ?
-                                md_type_desc.at(s->header.md_type_id) : (to_string() << "0x" << static_cast<uint32_t>(s->header.md_type_id));
+                                md_type_desc.at(s->header.md_type_id) : (to_string()
+                                << "0x" << std::hex << static_cast<uint32_t>(s->header.md_type_id) << std::dec);
                     LOG_DEBUG("Metadata mismatch - actual: " << type
-                        << ", expected: " << md_type_desc.at(expected_type) << "(0x" << std::hex << (uint32_t)expected_type << std::dec << ")");
+                        << ", expected: 0x"  << std::hex << (uint32_t)expected_type << std::dec << " (" << md_type_desc.at(expected_type) << ")");
                     return false;
                 }
 

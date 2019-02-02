@@ -69,7 +69,7 @@ int main(int argc, char * argv[]) try
         if (!device.as<rs2::playback>())
         {
             frames = pipe->wait_for_frames(); // wait for next set of frames from the camera
-            depth = color_map(frames.get_depth_frame()); // Find and colorize the depth data
+            depth = color_map.process(frames.get_depth_frame()); // Find and colorize the depth data
         }
 
         // Set options for the ImGui buttons
@@ -164,7 +164,7 @@ int main(int argc, char * argv[]) try
             rs2::playback playback = device.as<rs2::playback>();
             if (pipe->poll_for_frames(&frames)) // Check if new frames are ready
             {
-                depth = color_map(frames.get_depth_frame()); // Find and colorize the depth data for rendering
+                depth = color_map.process(frames.get_depth_frame()); // Find and colorize the depth data for rendering
             }
 
             // Render a seek bar for the player
@@ -194,7 +194,7 @@ int main(int argc, char * argv[]) try
         ImGui::Render();
 
         // Render depth frames from the default configuration, the recorder or the playback
-        depth_image.render(depth, { app.width() / 4, 0, 3 * app.width() / 5, 3 * app.height() / 5 + 50 });
+        depth_image.render(depth, { app.width() * 0.25f, app.height() * 0.25f, app.width() * 0.5f, app.height() * 0.75f  });
     }
     return EXIT_SUCCESS;
 }

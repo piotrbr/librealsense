@@ -103,6 +103,19 @@ namespace librealsense
         {
         case backend_type::standard:
             _backend = platform::create_backend();
+#if WITH_TRACKING
+            _tm2_context = std::make_shared<tm2_context>(this);
+            _tm2_context->on_device_changed += [this](std::shared_ptr<tm2_info> removed, std::shared_ptr<tm2_info> added)-> void
+            {
+                std::vector<rs2_device_info> rs2_devices_info_added;
+                std::vector<rs2_device_info> rs2_devices_info_removed;
+                if (removed)
+                    rs2_devices_info_removed.push_back({ shared_from_this(), removed });
+                if (added)
+                    rs2_devices_info_added.push_back({ shared_from_this(), added });
+                raise_devices_changed(rs2_devices_info_removed, rs2_devices_info_added);
+            };
+#endif
             break;
         case backend_type::record:
             _backend = std::make_shared<platform::record_backend>(platform::create_backend(), filename, section, mode);
@@ -117,19 +130,6 @@ namespace librealsense
        environment::get_instance().set_time_service(_backend->create_time_service());
 
        _device_watcher = _backend->create_device_watcher();
-#if WITH_TRACKING
-       _tm2_context = std::make_shared<tm2_context>(this);
-       _tm2_context->on_device_changed += [this](std::shared_ptr<tm2_info> removed, std::shared_ptr<tm2_info> added)-> void
-       {
-           std::vector<rs2_device_info> rs2_devices_info_added;
-           std::vector<rs2_device_info> rs2_devices_info_removed;
-           if(removed)
-               rs2_devices_info_removed.push_back({ shared_from_this(), removed });
-           if (added)
-               rs2_devices_info_added.push_back({ shared_from_this(), added });
-           raise_devices_changed(rs2_devices_info_removed, rs2_devices_info_added);
-       };
-#endif
     }
 
 
@@ -311,7 +311,9 @@ namespace librealsense
     {
 
         platform::backend_device_group devices(_backend->query_uvc_devices(), _backend->query_usb_devices(), _backend->query_hid_devices());
-
+#ifdef WITH_TRACKING
+        if (_tm2_context) _tm2_context->create_manager();
+#endif
         return create_devices(devices, _playback_devices, mask);
     }
 
@@ -326,8 +328,11 @@ namespace librealsense
         auto ctx = t->shared_from_this();
 
 #ifdef WITH_TRACKING
-        auto tm2_devices = tm2_info::pick_tm2_devices(ctx, _tm2_context->get_manager(), _tm2_context->query_devices());
-        std::copy(begin(tm2_devices), end(tm2_devices), std::back_inserter(list));
+        if (_tm2_context)
+        {
+            auto tm2_devices = tm2_info::pick_tm2_devices(ctx, _tm2_context->get_manager(), _tm2_context->query_devices());
+            std::copy(begin(tm2_devices), end(tm2_devices), std::back_inserter(list));
+        }
 #endif
 
         auto l500_devices = l500_info::pick_l500_devices(ctx, devices.uvc_devices, devices.usb_devices);
@@ -356,7 +361,8 @@ namespace librealsense
 
         for (auto&& item : playback_devices)
         {
-            list.push_back(item.second.lock());
+            if (auto dev = item.second.lock())
+                list.push_back(dev);
         }
 
         return list;
@@ -478,18 +484,33 @@ namespace librealsense
     }
 
     std::vector<std::pair<std::vector<platform::uvc_device_info>, std::vector<platform::hid_device_info>>> group_devices_and_hids_by_unique_id(
+        std::shared_ptr<context> ctx,
         const std::vector<std::vector<platform::uvc_device_info>>& devices,
         const std::vector<platform::hid_device_info>& hids)
     {
         std::vector<std::pair<std::vector<platform::uvc_device_info>, std::vector<platform::hid_device_info>>> results;
+        uint16_t vid;
+        uint16_t pid;
+
         for (auto&& dev : devices)
         {
             std::vector<platform::hid_device_info> hid_group;
             auto unique_id = dev.front().unique_id;
             for (auto&& hid : hids)
             {
-                if (hid.unique_id == unique_id || hid.unique_id == "*")
-                    hid_group.push_back(hid);
+                if (hid.unique_id != "")
+                {
+                    std::stringstream(hid.vid) >> std::hex >> vid;
+                    std::stringstream(hid.pid) >> std::hex >> pid;
+                    auto&& backend = ctx->get_backend();
+                    auto device_serial = backend.get_device_serial(vid, pid, unique_id);
+
+                    if ((hid.unique_id == unique_id) || // Linux check
+                        ((hid.unique_id == "*") && (hid.serial_number == device_serial))) // Windows check
+                    {
+                        hid_group.push_back(hid);
+                    }
+                }
             }
             results.push_back(std::make_pair(dev, hid_group));
         }

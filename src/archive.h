@@ -34,6 +34,7 @@ namespace librealsense
         rs2_time_t      backend_timestamp = 0;
         rs2_time_t last_timestamp = 0;
         unsigned long long last_frame_number = 0;
+        bool is_blocking = false;
 
         frame_additional_data() {};
 
@@ -44,14 +45,16 @@ namespace librealsense
             const uint8_t* md_buf,
             double backend_time,
             rs2_time_t last_timestamp,
-            unsigned long long last_frame_number)
+            unsigned long long last_frame_number,
+            bool in_is_blocking)
             : timestamp(in_timestamp),
             frame_number(in_frame_number),
             system_time(in_system_time),
             metadata_size(md_size),
             backend_timestamp(backend_time),
             last_timestamp(last_timestamp),
-            last_frame_number(last_frame_number)
+            last_frame_number(last_frame_number),
+            is_blocking(in_is_blocking)
         {
             // Copy up to 255 bytes to preserve metadata as raw data
             if (metadata_size)
@@ -155,6 +158,9 @@ namespace librealsense
 
         void mark_fixed() override { _fixed = true; }
         bool is_fixed() const override { return _fixed; }
+
+        void set_blocking(bool state) override { additional_data.is_blocking = state; }
+        bool is_blocking() const override { return additional_data.is_blocking; }
 
     private:
         // TODO: check boost::intrusive_ptr or an alternative
@@ -303,7 +309,7 @@ namespace librealsense
                 return((depth_frame*)_original.frame)->get_distance(x, y);
 
             uint64_t pixel = 0;
-            switch (get_bpp()/8) // bits per pixel
+            switch (get_bpp() / 8) // bits per pixel
             {
             case 1: pixel = get_frame_data()[y*get_width() + x];                                    break;
             case 2: pixel = reinterpret_cast<const uint16_t*>(get_frame_data())[y*get_width() + x]; break;
@@ -353,7 +359,7 @@ namespace librealsense
                 try
                 {
                     auto depth_sensor = As<librealsense::depth_sensor>(sensor);
-                    if(depth_sensor != nullptr)
+                    if (depth_sensor != nullptr)
                     {
                         return depth_sensor->get_depth_scale();
                     }
@@ -472,14 +478,14 @@ namespace librealsense
 
         pose_frame() : frame() {}
 
-        float3   get_translation()          const { return reinterpret_cast<const pose_info*>(data.data())->translation; }
-        float3   get_velocity()             const { return reinterpret_cast<const pose_info*>(data.data())->velocity; }
-        float3   get_acceleration()         const { return reinterpret_cast<const pose_info*>(data.data())->acceleration; }
-        float4   get_rotation()             const { return reinterpret_cast<const pose_info*>(data.data())->rotation; }
-        float3   get_angular_velocity()     const { return reinterpret_cast<const pose_info*>(data.data())->angular_velocity; }
-        float3   get_angular_acceleration() const { return reinterpret_cast<const pose_info*>(data.data())->angular_acceleration; }
-        uint32_t get_tracker_confidence()   const { return reinterpret_cast<const pose_info*>(data.data())->tracker_confidence; }
-        uint32_t get_mapper_confidence()    const { return reinterpret_cast<const pose_info*>(data.data())->mapper_confidence; }
+        float3   get_translation()          const { return reinterpret_cast<const pose_info*>(get_frame_data())->translation; }
+        float3   get_velocity()             const { return reinterpret_cast<const pose_info*>(get_frame_data())->velocity; }
+        float3   get_acceleration()         const { return reinterpret_cast<const pose_info*>(get_frame_data())->acceleration; }
+        float4   get_rotation()             const { return reinterpret_cast<const pose_info*>(get_frame_data())->rotation; }
+        float3   get_angular_velocity()     const { return reinterpret_cast<const pose_info*>(get_frame_data())->angular_velocity; }
+        float3   get_angular_acceleration() const { return reinterpret_cast<const pose_info*>(get_frame_data())->angular_acceleration; }
+        uint32_t get_tracker_confidence()   const { return reinterpret_cast<const pose_info*>(get_frame_data())->tracker_confidence; }
+        uint32_t get_mapper_confidence()    const { return reinterpret_cast<const pose_info*>(get_frame_data())->mapper_confidence; }
     };
 
     MAP_EXTENSION(RS2_EXTENSION_POSE_FRAME, librealsense::pose_frame);

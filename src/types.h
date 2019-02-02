@@ -48,6 +48,15 @@ namespace librealsense
 {
     #define UNKNOWN_VALUE "UNKNOWN"
     const double TIMESTAMP_USEC_TO_MSEC = 0.001;
+    const double TIMESTAMP_NSEC_TO_MSEC = 0.000001;
+
+#ifdef _WIN32
+/* The FW timestamps for HID are converted to Usec in Windows kernel */
+#define HID_TIMESTAMP_MULTIPLIER TIMESTAMP_USEC_TO_MSEC
+#else
+/* The FW timestamps for HID are converted to Nanosec in Linux kernel */
+#define HID_TIMESTAMP_MULTIPLIER TIMESTAMP_NSEC_TO_MSEC
+#endif // define HID_TIMESTAMP_MULTIPLIER
 
     ///////////////////////////////////
     // Utility types for general use //
@@ -483,7 +492,8 @@ namespace librealsense
             (a.height == b.height) &&
             (a.fps == b.fps) &&
             (a.format == b.format) &&
-            (a.index == b.index);
+            (a.index == b.index) &&
+            (a.stream == b.stream);
     }
 
     struct stream_descriptor
@@ -633,43 +643,6 @@ namespace librealsense
     }
 
     class frame_interface;
-
-    struct frame_holder
-    {
-        frame_interface* frame;
-
-        frame_interface* operator->()
-        {
-            return frame;
-        }
-
-        operator bool() const { return frame != nullptr; }
-
-        operator frame_interface*() const { return frame; }
-
-        frame_holder(frame_interface* f)
-        {
-            frame = f;
-        }
-
-        ~frame_holder();
-
-        frame_holder(frame_holder&& other)
-            : frame(other.frame)
-        {
-            other.frame = nullptr;
-        }
-
-        frame_holder() : frame(nullptr) {}
-
-
-        frame_holder& operator=(frame_holder&& other);
-
-        frame_holder clone() const;
-    private:
-        frame_holder& operator=(const frame_holder& other) = delete;
-        frame_holder(const frame_holder& other);
-    };
 
     class firmware_version
     {
@@ -992,6 +965,8 @@ namespace librealsense
         int size = 0;
 
     public:
+        static const int CAPACITY = C;
+
         small_heap()
         {
             for (auto i = 0; i < C; i++)
@@ -1582,7 +1557,7 @@ namespace librealsense
             return std::move(_value);
         }
 
-        bool operator==(const T& other) const 
+        bool operator==(const T& other) const
         {
             return this->_value == other;
         }
