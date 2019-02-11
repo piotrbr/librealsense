@@ -191,6 +191,8 @@ public class Native {
 
     public native static long rs2GetVideoStreamIntrinsics(long streamProfile, Intrinsics intrinsics);
 
+    public native static void rs2GetStreamProfileData(long streamProfile, StreamProfileData data);
+
     public native static long rs2DeleteIntrinsics(long intrinsics);
 
 

@@ -394,8 +394,40 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteStreamProfile
   (JNIEnv *, jclass, jlong streamProfileAddr) {
   rs2_stream_profile* streamProfile = (rs2_stream_profile*) streamProfileAddr;
   rs2_delete_stream_profile(streamProfile);
- }
+}
 
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2GetStreamProfileData
+  (JNIEnv *env, jclass, jlong streamProfileAddr, jobject obj) {
+    rs2_error *error = NULL;
+    rs2_stream_profile* streamProfile = (rs2_stream_profile*) streamProfileAddr;
+
+    // data fields
+    rs2_stream stream;
+    rs2_format format;
+    int index;
+    int unique_id;
+    int framerate;
+
+    rs2_get_stream_profile_data(streamProfile, &stream, &format, &index, &unique_id, &framerate, &error);
+    checkErrors(env, error);
+
+    jclass jData = env->FindClass("org/librealsense/StreamProfileData");
+
+    jfieldID jStreamIndex = env->GetFieldID(jData, "nativeStreamIndex", "I");
+    env->SetIntField(obj, jStreamIndex, (jint)stream);
+
+    jfieldID jFormatIndex = env->GetFieldID(jData, "nativeFormatIndex", "I");
+    env->SetIntField(obj, jFormatIndex, (jint)format);
+
+    jfieldID jIndex = env->GetFieldID(jData, "index", "I");
+    env->SetIntField(obj, jIndex, index);
+
+    jfieldID jUniqueId = env->GetFieldID(jData, "uniqueId", "I");
+    env->SetIntField(obj, jUniqueId, unique_id);
+
+    jfieldID jFrameRate = env->GetFieldID(jData, "frameRate", "I");
+    env->SetIntField(obj, jFrameRate, framerate);
+}
 
 
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetVideoStreamIntrinsics
@@ -443,13 +475,6 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetVideoStreamIntrinsics
      jCoeffsBody[4] = intrinsics->coeffs[4];
 
      env->ReleaseFloatArrayElements(jCoeffsArray, jCoeffsBody, 0);
-
-
-
-
-
-
-
 
     return (jlong)intrinsics;
 }
