@@ -110,6 +110,12 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2PipelineStop
     checkErrors(env, error);
 }
 
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeletePipeline
+  (JNIEnv *env, jclass, jlong pipeAddr) {
+    rs2_pipeline* pipe = (rs2_pipeline*)pipeAddr;
+    rs2_delete_pipeline(pipe);
+}
+
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateConfig
   (JNIEnv *env, jclass) {
     rs2_error *error = NULL;

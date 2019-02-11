@@ -131,6 +131,8 @@ public class Native {
 
     public native static void rs2PipelineStop(long pipeline);
 
+    public native static void rs2DeletePipeline(long pipeline);
+
     public native static long rs2PipelineProfileGetStreams(long pipelineProfile);
 
     public native static long rs2PipelineWaitForFrames(long pipeline, int timeOut);

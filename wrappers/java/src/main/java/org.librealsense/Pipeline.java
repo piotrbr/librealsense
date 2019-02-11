@@ -20,4 +20,9 @@ public class Pipeline {
     {
         Native.rs2PipelineStop(instance);
     }
+
+    public void delete()
+    {
+        Native.rs2DeletePipeline(instance);
+    }
 }
