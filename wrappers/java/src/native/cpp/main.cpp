@@ -292,6 +292,16 @@ JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetFrameVertices
     return directBuffer;
 }
 
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ExportToPly
+  (JNIEnv *env, jclass, jlong frameAddr, jstring fileName, jlong textureAddr) {
+    rs2_error *error = NULL;
+    const char *fname = env->GetStringUTFChars(fileName, NULL);
+    rs2_frame* frame = (rs2_frame*)frameAddr;
+    rs2_frame* texture = (rs2_frame*)textureAddr;
+    rs2_export_to_ply(frame, fname, texture, &error);
+    checkErrors(env, error);
+}
+
 JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2FrameAddRef
   (JNIEnv *env, jclass, jlong frameAddr) {
     rs2_error *error = NULL;

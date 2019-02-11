@@ -161,6 +161,8 @@ public class Native {
 
     public native static ByteBuffer rs2GetFrameVertices(long frame);
 
+    public native static void rs2ExportToPly(long frame, String fileName, long texture);
+
     public native static void rs2FrameAddRef(long frame);
 
     public native static void rs2ProcessFrame(long processingBlock, long frame);

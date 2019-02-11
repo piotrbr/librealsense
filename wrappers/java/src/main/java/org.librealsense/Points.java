@@ -16,4 +16,9 @@ public class Points extends Frame {
     {
         return Native.rs2GetFrameVertices(instance);
     }
+
+    public void exportToPly(String fileName, Frame texture)
+    {
+        Native.rs2ExportToPly(instance, fileName, texture.instance);
+    }
 }
