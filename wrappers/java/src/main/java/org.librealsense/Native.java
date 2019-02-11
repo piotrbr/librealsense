@@ -139,6 +139,8 @@ public class Native {
 
     public native static long rs2ReleaseFrame(long frame);
 
+    public native static long rs2GetFrameNumber(long frame);
+
     public native static long rs2GetFrameStreamProfile(long frame);
 
     public native static int rs2IsFrameExtendableTo(long frame, int extension);

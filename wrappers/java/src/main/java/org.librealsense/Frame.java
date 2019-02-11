@@ -41,4 +41,9 @@ public class Frame {
         long streamProfilePtr = Native.rs2GetFrameStreamProfile(instance);
         return new StreamProfile(streamProfilePtr);
     }
+
+    public long getFrameNumber()
+    {
+        return Native.rs2GetFrameNumber(instance);
+    }
 }
