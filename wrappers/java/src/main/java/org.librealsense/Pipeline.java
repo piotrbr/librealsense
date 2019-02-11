@@ -15,4 +15,9 @@ public class Pipeline {
     public FrameList waitForFrames(int timeout) {
         return new FrameList(Native.rs2PipelineWaitForFrames(instance, timeout));
     }
+
+    public void stop()
+    {
+        Native.rs2PipelineStop(instance);
+    }
 }
