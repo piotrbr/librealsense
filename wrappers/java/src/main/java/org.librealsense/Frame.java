@@ -36,4 +36,9 @@ public class Frame {
     public boolean isExtendableTo(Native.Extension extension) {
         return 1 == Native.rs2IsFrameExtendableTo(instance, extension.ordinal());
     }
+
+    public StreamProfile getStreamProfile() {
+        long streamProfilePtr = Native.rs2GetFrameStreamProfile(instance);
+        return new StreamProfile(streamProfilePtr);
+    }
 }

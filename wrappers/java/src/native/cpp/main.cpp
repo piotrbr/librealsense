@@ -184,11 +184,20 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2ExtractFrame
 }
 
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2ReleaseFrame
-  (JNIEnv *env, jclass, jlong frameAddr) {
-    rs2_frame* frame = (rs2_frame*) frameAddr;
-    rs2_release_frame(frame);
-    return (jlong)0;
-}
+   (JNIEnv *env, jclass, jlong frameAddr) {
+     rs2_frame* frame = (rs2_frame*) frameAddr;
+     rs2_release_frame(frame);
+     return (jlong)0;
+ }
+
+ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetFrameStreamProfile
+   (JNIEnv *env, jclass, jlong frameAddr) {
+   rs2_error *error = NULL;
+     rs2_frame* frame = (rs2_frame*) frameAddr;
+     const rs2_stream_profile* streamProfile = rs2_get_frame_stream_profile(frame, &error);
+     checkErrors(env, error);
+     return (jlong)streamProfile;
+ }
 
 JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2IsFrameExtendableTo
   (JNIEnv *env, jclass, jlong frameAddr, jint extensionOrd) {
