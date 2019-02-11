@@ -159,6 +159,8 @@ public class Native {
 
     public native static ByteBuffer rs2GetFrameData(long frame);
 
+    public native static ByteBuffer rs2GetFrameVertices(long frame);
+
     public native static void rs2FrameAddRef(long frame);
 
     public native static void rs2ProcessFrame(long processingBlock, long frame);
@@ -170,6 +172,10 @@ public class Native {
     public native static void rs2StartProcessingQueue(long processingBlock, long queue);
 
     public native static long rs2CreateColorizer();
+
+    public native static long rs2CreatePointCloud();
+
+    public native static int rs2GetFramePointsCount(long frame);
 
     public native static long rs2QuerySensors(long device);
 

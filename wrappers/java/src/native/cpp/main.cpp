@@ -276,6 +276,22 @@ JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetFrameData
     return directBuffer;
 }
 
+JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetFrameVertices
+  (JNIEnv *env, jclass, jlong frameAddr) {
+    rs2_frame* frame = (rs2_frame*) frameAddr;
+    rs2_error *error = NULL;
+
+    int width = rs2_get_frame_width(frame, NULL);
+    int height = rs2_get_frame_height(frame, NULL);
+    int stride = rs2_get_frame_stride_in_bytes(frame, NULL);
+    int capacity = stride * height;
+
+    const void * data = rs2_get_frame_vertices(frame, &error);
+    checkErrors(env, error);
+    jobject directBuffer = env->NewDirectByteBuffer((void*)(data), capacity);
+    return directBuffer;
+}
+
 JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2FrameAddRef
   (JNIEnv *env, jclass, jlong frameAddr) {
     rs2_error *error = NULL;
@@ -321,6 +337,25 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateColorizer
     checkErrors(env, error);
 
     return (jlong)block;
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreatePointCloud
+  (JNIEnv *env, jclass) {
+    rs2_error *error = NULL;
+    rs2_processing_block* block = rs2_create_pointcloud(&error);
+    checkErrors(env, error);
+
+    return (jlong)block;
+}
+
+JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetFramePointsCount
+  (JNIEnv *env, jclass, jlong frameAddr) {
+    rs2_error *error = NULL;
+    rs2_frame* frame = (rs2_frame*)frameAddr;
+    int count = rs2_get_frame_points_count(frame, &error);
+    checkErrors(env, error);
+
+    return count;
 }
 
 JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2StartProcessingQueue
