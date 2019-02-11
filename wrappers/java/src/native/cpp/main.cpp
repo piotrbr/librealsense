@@ -60,10 +60,18 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateDevice
     return (jlong) device;
 }
 
-JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2DeleteDevice
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteDevice
   (JNIEnv *env, jclass, jlong deviceAddr) {
     rs2_device* device = (rs2_device*) deviceAddr;
     rs2_delete_device(device);
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2HardwareReset
+  (JNIEnv *env, jclass, jlong deviceAddr) {
+    rs2_error *error = NULL;
+    rs2_device* device = (rs2_device*) deviceAddr;
+    rs2_hardware_reset(device, &error);
+    checkErrors(env, error);
 }
 
 JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2SupportsDeviceInfo

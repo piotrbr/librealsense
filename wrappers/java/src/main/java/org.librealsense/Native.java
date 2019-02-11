@@ -105,7 +105,9 @@ public class Native {
 
     public native static long rs2CreateDevice(long deviceList, int deviceIndex);
 
-    public native static long rs2DeleteDevice(long device);
+    public native static void rs2DeleteDevice(long device);
+
+    public native static void rs2HardwareReset(long device);
 
     public native static int rs2SupportsDeviceInfo(long device, int info);
 
