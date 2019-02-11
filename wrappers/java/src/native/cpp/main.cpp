@@ -276,6 +276,62 @@ JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetFrameData
     return directBuffer;
 }
 
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2FrameAddRef
+  (JNIEnv *env, jclass, jlong frameAddr) {
+    rs2_error *error = NULL;
+    rs2_frame* frame = (rs2_frame*)frameAddr;
+    rs2_frame_add_ref(frame, &error);
+    checkErrors(env, error);
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ProcessFrame
+  (JNIEnv *env, jclass, jlong blockAddr, jlong frameAddr) {
+    rs2_error *error = NULL;
+    rs2_processing_block* block = (rs2_processing_block*)blockAddr;
+    rs2_frame* frame = (rs2_frame*)frameAddr;
+    rs2_process_frame(block, frame, &error);
+    checkErrors(env, error);
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PollForFrame
+  (JNIEnv *env, jclass, jlong queueAddr) {
+    rs2_error *error = NULL;
+    rs2_frame_queue* queue = (rs2_frame_queue*)queueAddr;
+    rs2_frame* frame;
+
+    int result = rs2_poll_for_frame(queue, &frame, &error);
+    checkErrors(env, error);
+
+    return result == 1 ? (jlong)frame : -1;
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateFrameQueue
+  (JNIEnv *env, jclass, jint capacity) {
+    rs2_error *error = NULL;
+    rs2_frame_queue* queue = rs2_create_frame_queue(capacity, &error);
+    checkErrors(env, error);
+
+    return (jlong)queue;
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateColorizer
+  (JNIEnv *env, jclass) {
+    rs2_error *error = NULL;
+    rs2_processing_block* block = rs2_create_colorizer(&error);
+    checkErrors(env, error);
+
+    return (jlong)block;
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2StartProcessingQueue
+  (JNIEnv *env, jclass, jlong blockAddr, jlong queueAddr) {
+    rs2_error *error = NULL;
+    rs2_processing_block* block = (rs2_processing_block*)blockAddr;
+    rs2_frame_queue* queue = (rs2_frame_queue*)queueAddr;
+    rs2_start_processing_queue(block, queue, &error);
+    checkErrors(env, error);
+}
+
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2QuerySensors
   (JNIEnv *env, jclass, jlong deviceAddr) {
     rs2_error *error = NULL;
