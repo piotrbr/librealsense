@@ -19,4 +19,9 @@ public class Device {
     public SensorList querySensors() {
         return new SensorList(Native.rs2QuerySensors(instance));
     }
+
+    public void delete()
+    {
+        Native.rs2DeleteDevice(instance);
+    }
 }

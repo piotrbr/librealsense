@@ -97,11 +97,15 @@ public class Native {
 
     public native static long rs2CreateContext(int apiVersion);
 
+    public native static void rs2DeleteContext(long context);
+
     public native static long rs2QueryDevices(long context);
 
     public native static int rs2GetDeviceCount(long deviceList);
 
     public native static long rs2CreateDevice(long deviceList, int deviceIndex);
+
+    public native static long rs2DeleteDevice(long device);
 
     public native static int rs2SupportsDeviceInfo(long device, int info);
 

@@ -18,6 +18,11 @@ public class Context {
         return new Pipeline(pipeline);
     }
 
+    public void delete()
+    {
+        Native.rs2DeleteContext(instance);
+    }
+
     public DeviceList queryDevices() {
         return new DeviceList(Native.rs2QueryDevices(instance));
     }
