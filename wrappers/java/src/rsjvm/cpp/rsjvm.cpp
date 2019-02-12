@@ -521,7 +521,7 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2GetStreamProfileData
     rs2_get_stream_profile_data(streamProfile, &stream, &format, &index, &unique_id, &framerate, &error);
     checkErrors(env, error);
 
-    jclass jData = env->FindClass("org/librealsense/StreamProfileData");
+    jclass jData = env->FindClass("org/librealsense/steamprofiles/StreamProfileData");
 
     jfieldID jStreamIndex = env->GetFieldID(jData, "nativeStreamIndex", "I");
     env->SetIntField(obj, jStreamIndex, (jint)stream);
@@ -548,7 +548,7 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetVideoStreamIntrinsics
     rs2_get_video_stream_intrinsics(streamProfile, intrinsics, &error);
 
 
-    jclass jIntrinsics = env->FindClass("org/librealsense/Intrinsics");
+    jclass jIntrinsics = env->FindClass("org/librealsense/types/Intrinsics");
 
     jfieldID jWidth = env->GetFieldID(jIntrinsics, "width", "I");
     env->SetIntField(obj, jWidth, intrinsics->width);

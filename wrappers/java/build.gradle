@@ -131,6 +131,10 @@ model {
     }
 }
 
+jar {
+    archivesBaseName = 'realsense-jvm'
+}
+
 task copyLibs(type: Copy) {
     if (System.properties['os.name'] == 'Mac OS X') {
         from "$projectDir/build/libs/rsjvm/shared/debug/librsjvm.dylib"

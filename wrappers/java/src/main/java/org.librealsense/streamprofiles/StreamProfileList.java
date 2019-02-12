@@ -1,10 +1,12 @@
-package org.librealsense;
+package org.librealsense.streamprofiles;
+
+import org.librealsense.Native;
 
 public class StreamProfileList {
 
     long instance;
 
-    protected StreamProfileList(long instance) {
+    public StreamProfileList(long instance) {
         this.instance = instance;
     }
 

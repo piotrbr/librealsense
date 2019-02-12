@@ -1,5 +1,8 @@
 package org.librealsense;
 
+import org.librealsense.streamprofiles.StreamProfileData;
+import org.librealsense.types.Intrinsics;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Paths;

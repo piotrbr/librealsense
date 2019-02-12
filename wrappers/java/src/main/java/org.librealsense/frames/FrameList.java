@@ -1,10 +1,12 @@
-package org.librealsense;
+package org.librealsense.frames;
+
+import org.librealsense.Native;
 
 public class FrameList {
 
     protected long instance;
 
-    protected FrameList(long instance) {
+    public FrameList(long instance) {
         this.instance = instance;
     }
 

@@ -1,4 +1,6 @@
-package org.librealsense;
+package org.librealsense.sensors;
+
+import org.librealsense.Native;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +9,7 @@ public class SensorList {
 
     long instance;
 
-    protected SensorList(long instance) {
+    public SensorList(long instance) {
         this.instance = instance;
     }
 

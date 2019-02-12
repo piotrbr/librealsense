@@ -1,10 +1,13 @@
-package org.librealsense;
+package org.librealsense.devices;
+
+import org.librealsense.Native;
+import org.librealsense.sensors.SensorList;
 
 public class Device {
 
     private long instance;
 
-    protected Device(long instance) {
+    public Device(long instance) {
         this.instance = instance;
     }
 

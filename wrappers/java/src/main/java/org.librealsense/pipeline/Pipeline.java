@@ -1,10 +1,13 @@
-package org.librealsense;
+package org.librealsense.pipeline;
+
+import org.librealsense.Native;
+import org.librealsense.frames.FrameList;
 
 public class Pipeline {
 
     private long instance;
 
-    protected Pipeline(long instance) {
+    public Pipeline(long instance) {
         this.instance = instance;
     }
 

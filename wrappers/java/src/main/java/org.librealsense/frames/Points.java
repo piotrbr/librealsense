@@ -1,4 +1,7 @@
-package org.librealsense;
+package org.librealsense.frames;
+
+import org.librealsense.frames.Frame;
+import org.librealsense.Native;
 
 import java.nio.ByteBuffer;
 

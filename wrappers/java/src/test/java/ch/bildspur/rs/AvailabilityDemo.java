@@ -1,7 +1,7 @@
 package ch.bildspur.rs;
 
 import org.librealsense.Context;
-import org.librealsense.DeviceList;
+import org.librealsense.devices.DeviceList;
 import org.librealsense.Native;
 
 public class AvailabilityDemo {

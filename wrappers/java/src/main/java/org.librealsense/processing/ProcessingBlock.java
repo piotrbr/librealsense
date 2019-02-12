@@ -1,7 +1,7 @@
-package org.librealsense;
+package org.librealsense.processing;
 
-import org.librealsense.Frame;
-import org.librealsense.FrameList;
+import org.librealsense.frames.Frame;
+import org.librealsense.frames.FrameQueue;
 import org.librealsense.Native;
 
 public abstract class ProcessingBlock {
@@ -10,8 +10,8 @@ public abstract class ProcessingBlock {
 
     public Frame process(Frame original)
     {
-        Native.rs2FrameAddRef(original.instance);
-        Native.rs2ProcessFrame(this.instance, original.instance);
+        Native.rs2FrameAddRef(original.getInstance());
+        Native.rs2ProcessFrame(this.instance, original.getInstance());
 
         Frame result = queue.pollForFrame();
         if(result != null)

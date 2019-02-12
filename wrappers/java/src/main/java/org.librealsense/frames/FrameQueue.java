@@ -1,4 +1,6 @@
-package org.librealsense;
+package org.librealsense.frames;
+
+import org.librealsense.Native;
 
 public class FrameQueue {
 
@@ -17,5 +19,9 @@ public class FrameQueue {
             return null;
 
         return new Frame(ptr);
+    }
+
+    public long getInstance() {
+        return instance;
     }
 }

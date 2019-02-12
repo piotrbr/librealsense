@@ -1,4 +1,6 @@
-package org.librealsense;
+package org.librealsense.devices;
+
+import org.librealsense.Native;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +9,7 @@ public class DeviceList {
 
     long instance;
 
-    protected DeviceList(long instance) {
+    public DeviceList(long instance) {
         this.instance = instance;
     }
 

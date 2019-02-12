@@ -1,6 +1,6 @@
-package org.librealsense;
+package org.librealsense.streamprofiles;
 
-class StreamProfileData {
+public class StreamProfileData {
     int index;
 
     int uniqueId;

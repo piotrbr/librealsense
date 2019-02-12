@@ -1,4 +1,4 @@
-package org.librealsense;
+package org.librealsense.types;
 
 public class Intrinsics {
     public int width;

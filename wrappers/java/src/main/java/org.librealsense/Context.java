@@ -1,5 +1,8 @@
 package org.librealsense;
 
+import org.librealsense.devices.DeviceList;
+import org.librealsense.pipeline.Pipeline;
+
 public class Context {
 
     private long instance;

@@ -1,9 +1,12 @@
-package org.librealsense;
+package org.librealsense.sensors;
+
+import org.librealsense.Native;
+import org.librealsense.streamprofiles.StreamProfileList;
 
 public class Sensor {
     long instance;
 
-    protected Sensor(long instance) {
+    public Sensor(long instance) {
         this.instance = instance;
     }
 

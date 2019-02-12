@@ -1,4 +1,7 @@
-package org.librealsense;
+package org.librealsense.streamprofiles;
+
+import org.librealsense.types.Intrinsics;
+import org.librealsense.Native;
 
 public class StreamProfile {
 
@@ -14,7 +17,7 @@ public class StreamProfile {
 
     int frameRate;
 
-    protected StreamProfile(long instance) {
+    public StreamProfile(long instance) {
         this.instance = instance;
     }
 

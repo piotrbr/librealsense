@@ -1,4 +1,6 @@
-package org.librealsense;
+package org.librealsense.types;
+
+import org.librealsense.Native;
 
 public class Projection {
 

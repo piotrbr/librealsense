@@ -1,4 +1,7 @@
-package org.librealsense;
+package org.librealsense.frames;
+
+import org.librealsense.Native;
+import org.librealsense.streamprofiles.StreamProfile;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -7,7 +10,7 @@ public class Frame {
 
     protected long instance;
 
-    protected Frame(long instance) {
+    public Frame(long instance) {
         this.instance = instance;
     }
 
@@ -45,5 +48,9 @@ public class Frame {
     public long getFrameNumber()
     {
         return Native.rs2GetFrameNumber(instance);
+    }
+
+    public long getInstance() {
+        return instance;
     }
 }

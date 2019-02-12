@@ -1,10 +1,13 @@
-package org.librealsense;
+package org.librealsense.pipeline;
+
+import org.librealsense.Native;
+import org.librealsense.devices.Device;
 
 public class Config {
 
     protected long instance;
 
-    protected Config(long instance) {
+    public Config(long instance) {
         this.instance = instance;
     }
 
