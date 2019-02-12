@@ -521,7 +521,7 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2GetStreamProfileData
     rs2_get_stream_profile_data(streamProfile, &stream, &format, &index, &unique_id, &framerate, &error);
     checkErrors(env, error);
 
-    jclass jData = env->FindClass("org/librealsense/steamprofiles/StreamProfileData");
+    jclass jData = env->FindClass("org/librealsense/streamprofiles/StreamProfileData");
 
     jfieldID jStreamIndex = env->GetFieldID(jData, "nativeStreamIndex", "I");
     env->SetIntField(obj, jStreamIndex, (jint)stream);
