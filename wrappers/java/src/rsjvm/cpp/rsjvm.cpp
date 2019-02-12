@@ -281,10 +281,7 @@ JNIEXPORT jobject JNICALL Java_org_librealsense_Native_rs2GetFrameVertices
     rs2_frame* frame = (rs2_frame*) frameAddr;
     rs2_error *error = NULL;
 
-    int width = rs2_get_frame_width(frame, NULL);
-    int height = rs2_get_frame_height(frame, NULL);
-    int stride = rs2_get_frame_stride_in_bytes(frame, NULL);
-    int capacity = stride * height;
+    int capacity = rs2_get_frame_points_count(frame, &error);
 
     const void * data = rs2_get_frame_vertices(frame, &error);
     checkErrors(env, error);
