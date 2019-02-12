@@ -92,3 +92,5 @@ wrappers/java/realsense-jvm.ipr
 wrappers/java/realsense-jvm.iws
 wrappers/IntelRealSenseJava/.idea
 copyToRs.sh
+wrappers/java/out
+wrappers/java/libs

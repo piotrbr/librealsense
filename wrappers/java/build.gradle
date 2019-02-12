@@ -1,111 +1,145 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
+group 'org.librealsense'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'cpp'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
 }
 
-plugins {
-    id 'jvm-component'
-    id 'java-lang'
-    id 'cpp'
-    id 'maven-publish'
-    id 'org.bven.jniplugin' version '0.0.5'
-    id 'idea'
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-version = '2.17.0-0'
-group = 'org.librealsense'
+println "Building on OS: " + System.properties['os.name']
+println "Using JDK: " + System.properties['java.home']
 
-apply plugin: 'maven-publish'
+// change these variables before building
+def SYS_INCLUDE_DIR = '/usr/include'
+def SYS_LOCAL_INCLUDE_DIR = '/usr/local/include'
+def JNI_INCLUDE_DIR = '/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/include'
+def JNI_LIB_DIR = '/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/lib'
+def RS_INCLUDE_DIR = "${project.projectDir}/../../include"
+def RS_LIB = "${project.projectDir}/../../build/librealsense2.dylib"
+def PROJECT_INCLUDE_DIR = "${project.projectDir}/src/rsjvm/headers"
+
+println "Using system include directory: " + SYS_INCLUDE_DIR
+println "Using system local include directory: " + SYS_LOCAL_INCLUDE_DIR
+println "Using JNI include directory: " + JNI_INCLUDE_DIR
+println "Using JNI lib directory: " + JNI_LIB_DIR
+println "Using RealSense include directory: " + RS_INCLUDE_DIR
+println "Using RealSense lib directory: " + RS_LIB
+println "Using Project include directory: " + PROJECT_INCLUDE_DIR
 
 model {
-    platforms {
-        ['windows', 'linux', 'osx', 'freebsd-10', 'solaris'].each { os ->
-            ['x64'].each { arch ->
-                "$os-$arch" {
-                    architecture arch
-                    operatingSystem os
-                }
-            }
-        }
-    }
-
-
     components {
-        main(JvmLibrarySpec) {
-        }
-
-        'native'(JNILibrarySpec) { jniLibSpec ->
-            library "main"
-            nativeClass "org.librealsense.Native"
-
-            $.platforms.all {
-                jniLibSpec.targetPlatform it.name
+        rsjvm(NativeLibrarySpec) {
+            sources {
+                cpp {
+                    source {
+                        srcDir 'src/rsjvm/cpp'
+                        include "**/*.cpp"
+                    }
+                }
             }
-
-            binaries.all {
-                lib new JNIDependency(project)
-                cppCompiler.args "-I${project.projectDir}/../../include"
-                linker.args "-L${project.projectDir}/../../"
-
-                if (targetPlatform.operatingSystem.macOsX) {
-                    cppCompiler.args "-I${project.projectDir}/../../include"
-                    linker.args "${project.projectDir}/../../build/librealsense2.dylib"
-                }
-
-                if (targetPlatform.operatingSystem.windows) {
-
-                    // https://github.com/couchbase/couchbase-lite-java-native/issues/23
-                    //cppCompiler.args "/IC:/Program Files (x86)/Windows Kits/10/Include/10.0.10586.0/ucrt"
-                    def arch = {
-                        if (targetPlatform.architecture.name.contains('arm')) {
-                            'arm'
-                        } else if (targetPlatform.architecture.name.contains('64')) {
-                            'x64'
-                        } else {
-                            'x86'
-                        }
-                    }()
-
-//                    linker.args "/LIBPATH:C:/Program Files (x86)/Windows Kits/10/Lib/10.0.10586.0/ucrt/${arch}"
-                    cppCompiler.args "-I${project.projectDir}/../../include"
-                    linker.args "-lrealsense2"
-                    linker.args "/LIBPATH:${project.projectDir}/../../Debug/"
-                    linker.args "realsense2.lib"
-                }
+            buildTypes {
+                debug
+                release
             }
         }
     }
-
-    tasks {
-        run(JavaExec) {
-            def compile = $.tasks.compileMainJarMainJava;
-            def jar = $.tasks.createMainJar;
-            dependsOn $.tasks.mainJar
-            classpath compile.classpath
-            classpath jar.outputs
-            main = 'org.librealsense.Native'
+    toolChains {
+        gcc(Gcc) {
+            eachPlatform {
+                if (System.properties['os.name'].equals('Mac OS X')) {
+                    cppCompiler.withArguments { args ->
+                        args << "-O2"
+                        args << "-I" + SYS_INCLUDE_DIR
+                        args << "-I" + SYS_LOCAL_INCLUDE_DIR
+                        args << "-I" + JNI_INCLUDE_DIR
+                        args << "-I" + JNI_INCLUDE_DIR + "/darwin"
+                        args << "-I" + RS_INCLUDE_DIR
+                        args << "-I" + PROJECT_INCLUDE_DIR
+                        args << "-std=c++11"
+                    }
+                    linker.withArguments { args ->
+                        args << "-O2"
+                        args << "-lc++"
+                        args << RS_LIB
+                    }
+                } else {
+                    path "/opt/rh/devtoolset-2/root/usr/bin/gcc"
+                    cppCompiler.withArguments { args ->
+                        args << "-O2"
+                        args << "-I" + SYS_INCLUDE_DIR
+                        args << "-I" + SYS_LOCAL_INCLUDE_DIR
+                        args << "-I" + JNI_INCLUDE_DIR
+                        args << "-I" + JNI_INCLUDE_DIR + "/linux"
+                        args << "-I" + RS_INCLUDE_DIR
+                        args << "-I" + PROJECT_INCLUDE_DIR
+                        args << "-std=c++11"
+                    }
+                    linker.withArguments { args ->
+                        args << "-O2"
+                        args << "-lstdc++"
+                        args << RS_LIB
+                    }
+                }
+            }
         }
-
-        wrapper {
-            gradleVersion = '4.7'
-        }
-    }
-
-    publishing {
-        publications {
-            impl(MavenPublication) {
-                groupId 'org.librealsense'
-                artifactId 'realsense-jvm'
-                artifact $.tasks.createMainJar
+        clang(Clang) {
+            eachPlatform {
+                if (System.properties['os.name'].equals('Mac OS X')) {
+                    cppCompiler.withArguments { args ->
+                        args << "-O2"
+                        args << "-I" + SYS_INCLUDE_DIR
+                        args << "-I" + SYS_LOCAL_INCLUDE_DIR
+                        args << "-I" + JNI_INCLUDE_DIR
+                        args << "-I" + JNI_INCLUDE_DIR + "/darwin"
+                        args << "-I" + RS_INCLUDE_DIR
+                        args << "-I" + PROJECT_INCLUDE_DIR
+                        args << "-std=c++11"
+                    }
+                    linker.withArguments { args ->
+                        args << "-O2"
+                        args << "-lc++"
+                        args << RS_LIB
+                    }
+                } else {
+                    cppCompiler.withArguments { args ->
+                        args << "-O2"
+                        args << "-I" + SYS_INCLUDE_DIR
+                        args << "-I" + SYS_LOCAL_INCLUDE_DIR
+                        args << "-I" + JNI_INCLUDE_DIR
+                        args << "-I" + JNI_INCLUDE_DIR + "/linux"
+                        args << "-I" + RS_INCLUDE_DIR
+                        args << "-I" + PROJECT_INCLUDE_DIR
+                        args << "-std=c++11"
+                    }
+                    linker.withArguments { args ->
+                        args << "-O2"
+                        args << "-lstdc++"
+                        args << RS_LIB
+                    }
+                }
             }
         }
     }
 }
 
-idea {
-    module {
-        sourceDirs += file('src/main/java')
-        testSourceDirs += file('test/java')
+task copyLibs(type: Copy) {
+    if (System.properties['os.name'] == 'Mac OS X') {
+        from "$projectDir/build/libs/rsjvm/shared/debug/librsjvm.dylib"
     }
+    else {
+        from "$projectDir/build/libs/rsjvm/shared/debug/librsjvm.so"
+    }
+    from RS_LIB
+    into 'libs'
 }
+
+build.finalizedBy(copyLibs)

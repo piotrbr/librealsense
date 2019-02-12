@@ -5,7 +5,6 @@ import java.nio.ByteBuffer;
 import java.nio.file.Paths;
 
 public class Native {
-
     public static int RS2_CAMERA_INFO_NAME = 0;
     public static int RS2_CAMERA_INFO_SERIAL_NUMBER = 1;
     public static int RS2_CAMERA_INFO_FIRMWARE_VERSION = 2;
@@ -82,13 +81,13 @@ public class Native {
 
         if (os.contains("win")) {
             System.load(Paths.get(libPath, "realsense2.dll").toAbsolutePath().toString());
-            System.load(Paths.get(libPath, "native.dll").toAbsolutePath().toString());
+            System.load(Paths.get(libPath, "rsjvm.dll").toAbsolutePath().toString());
         } else if (os.contains("mac")) {
             System.load(Paths.get(libPath, "librealsense2.dylib").toAbsolutePath().toString());
-            System.load(Paths.get(libPath, "libnative.dylib").toAbsolutePath().toString());
+            System.load(Paths.get(libPath, "librsjvm.dylib").toAbsolutePath().toString());
         } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
             System.load(Paths.get(libPath, "librealsense2.so").toAbsolutePath().toString());
-            System.load(Paths.get(libPath, "libnative.so").toAbsolutePath().toString());
+            System.load(Paths.get(libPath, "librsjvm.so").toAbsolutePath().toString());
         } else {
             // Operating System not supported!
             System.out.println("Your os is not supported. Please load the native libraries yourself!");
