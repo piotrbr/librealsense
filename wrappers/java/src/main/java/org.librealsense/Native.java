@@ -177,6 +177,8 @@ public class Native {
 
     public native static long rs2CreatePointCloud();
 
+    public native static long rs2CreateAlign(int stream);
+
     public native static int rs2GetFramePointsCount(long frame);
 
     public native static long rs2QuerySensors(long device);

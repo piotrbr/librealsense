@@ -349,6 +349,15 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateColorizer
     return (jlong)block;
 }
 
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateAlign
+  (JNIEnv *env, jclass, jint stream) {
+    rs2_error *error = NULL;
+    rs2_processing_block* block = rs2_create_align(static_cast<rs2_stream>(stream), &error);
+    checkErrors(env, error);
+
+    return (jlong)block;
+}
+
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreatePointCloud
   (JNIEnv *env, jclass) {
     rs2_error *error = NULL;

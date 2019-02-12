@@ -16,16 +16,6 @@ plugins {
 version = '2.17.0-0'
 group = 'org.librealsense'
 
-// Process resources task doesn't get created if there aren't any resources; create a placeholder to ensure that it does.
-def placeholder = file('src/main/resources/deleteme')
-if (!placeholder.parentFile.exists()) {
-    placeholder.parentFile.mkdirs()
-}
-if (!placeholder.exists()) {
-    placeholder.createNewFile()
-}
-placeholder.deleteOnExit()
-
 apply plugin: 'maven-publish'
 
 model {
@@ -110,5 +100,12 @@ model {
                 artifact $.tasks.createMainJar
             }
         }
+    }
+}
+
+idea {
+    module {
+        sourceDirs += file('src/main/java')
+        testSourceDirs += file('test/java')
     }
 }
