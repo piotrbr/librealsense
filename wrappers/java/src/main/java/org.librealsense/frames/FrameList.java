@@ -21,4 +21,16 @@ public class FrameList {
     public void release() {
         Native.rs2ReleaseFrame(instance);
     }
+
+    public Frame asFrame()
+    {
+        Native.rs2FrameAddRef(instance);
+        return new Frame(instance);
+    }
+
+    public static FrameList fromFrame(Frame frame)
+    {
+        Native.rs2FrameAddRef(frame.instance);
+        return new FrameList(frame.instance);
+    }
 }
