@@ -78,11 +78,14 @@ public class PointCloudDemo extends PApplet {
     public void draw() {
         background(128);
 
+        Points points = new Points(0);
+
         // read frames
         FrameList frames = pipeline.waitForFrames(5000);
+        Frame frame = new Frame(0);
 
         for (int i = 0; i < frames.frameCount(); i++) {
-            Frame frame = frames.frame(i);
+            frame = frames.frame(i);
 
             StreamProfile profile = frame.getStreamProfile();
             profile.getProfileData();
@@ -90,25 +93,32 @@ public class PointCloudDemo extends PApplet {
             // depth stream
             if (profile.getStream() == Native.Stream.RS2_STREAM_DEPTH) {
                 // check if pointcloud frame is available
-                Points points = pointCloud.process(frame);
+                points = pointCloud.process(frame);
 
                 if (points != null) {
                     // do something with points
-                    println("Points: " + points.getCount());
                     ByteBuffer rawVertices = points.rawVertexBuffer();
                     rawVertices.order(ByteOrder.nativeOrder());
-
                     vertexBuffer = rawVertices.asFloatBuffer();
-
-                    points.release();
                 }
             }
-
-            frame.release();
         }
-        frames.release();
 
-        println("Buffer: " + vertexBuffer.capacity());
+        // render
+        for(int i = 8000; i < 8021; i += 3)
+        {
+            float x = vertexBuffer.get(i);
+            float y = vertexBuffer.get(i + 1);
+            float z = vertexBuffer.get(i + 2);
+
+            print("(" + x + "," + y + "," + z + ") ");
+        }
+
+        println("");
+
+        points.release();
+        frame.release();
+        frames.release();
 
         surface.setTitle("FPS: " + round(frameRate));
     }
