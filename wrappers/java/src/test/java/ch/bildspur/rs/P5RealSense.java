@@ -33,7 +33,6 @@ public class P5RealSense {
         for (int i = 0; i < frame.getStrideInBytes() * colorImage.height; i += 3)
         {
             colorImage.pixels[i / 3] = toColor(buffer.get(i) & 0xFF, buffer.get(i + 1) & 0xFF, buffer.get(i + 2) & 0xFF);
-            System.out.println(colorImage.pixels[i / 3]);
         }
 
         colorImage.updatePixels();
