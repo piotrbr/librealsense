@@ -97,7 +97,7 @@ public class StreamDemo extends PApplet {
 
     @Override
     public void draw() {
-        // background(0);
+        background(0);
 
         // read frames
         FrameList frames = pipeline.waitForFrames(5000);
@@ -107,7 +107,7 @@ public class StreamDemo extends PApplet {
 
             StreamProfile profile = frame.getStreamProfile();
             profile.getProfileData();
-            System.out.println("profile " + profile.getStream());
+
             // depth stream
             if (profile.getStream() == Native.Stream.RS2_STREAM_DEPTH) {
                 P5RealSense.readDepthBuffer(frame, depthBuffer);
@@ -117,7 +117,6 @@ public class StreamDemo extends PApplet {
 
                 if (colorizedFrame != null) {
                     P5RealSense.readColorImage(colorizedFrame, depthImage);
-
                     colorizedFrame.release();
                 }
             }
@@ -139,14 +138,13 @@ public class StreamDemo extends PApplet {
         }
         frames.release();
 
-        System.out.println(depthImage.pixels.length);
         // display streams
-        //image(depthImage, 0, 0);
-        //image(colorImage, inputWidth, 0);
-        //image(leftIRImage, 0, inputHeight);
-        //image(rightIRImage, inputWidth, inputHeight);
+        image(depthImage, 0, 0);
+        image(colorImage, inputWidth, 0);
+        image(leftIRImage, 0, inputHeight);
+        image(rightIRImage, inputWidth, inputHeight);
 
-        // surface.setTitle("FPS: " + round(frameRate));
+        surface.setTitle("FPS: " + round(frameRate));
     }
 
     @Override
@@ -157,16 +155,6 @@ public class StreamDemo extends PApplet {
 
     public static void main(String[] args) {
         Native.loadNativeLibraries("libs");
-        StreamDemo streamDemo = new StreamDemo();
-        streamDemo.setup();
-        for (int i = 0; i < 6; i++) {
-            streamDemo.draw();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        streamDemo.stop();
+        new StreamDemo().runSketch();
     }
 }
