@@ -6,7 +6,7 @@ public class FrameList {
 
     protected long instance;
 
-    public  FrameList(long instance) {
+    public FrameList(long instance) {
         this.instance = instance;
     }
 
