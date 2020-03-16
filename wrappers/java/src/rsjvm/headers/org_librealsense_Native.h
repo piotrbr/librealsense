@@ -121,6 +121,22 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigEnableDevice
 
 /*
  * Class:     org_librealsense_Native
+ * Method:    rs2ConfigEnableRecordToFile
+ * Signature: (JLjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigEnableRecordToFile
+  (JNIEnv *, jclass, jlong, jstring);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2ConfigEnableDeviceFromFile
+ * Signature: (JLjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigEnableDeviceFromFile
+  (JNIEnv *, jclass, jlong, jstring);
+
+/*
+ * Class:     org_librealsense_Native
  * Method:    rs2ConfigDisableStream
  * Signature: (JJ)V
  */
@@ -174,6 +190,14 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineProfileGetStream
  */
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineWaitForFrames
   (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2PipelinePollForFrames
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelinePollForFrames
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     org_librealsense_Native
@@ -474,7 +498,7 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteStreamProfile
 /*
  * Class:     org_librealsense_Native
  * Method:    rs2GetVideoStreamIntrinsics
- * Signature: (JLorg/librealsense/Intrinsics;)J
+ * Signature: (JLorg/librealsense/types/Intrinsics;)J
  */
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetVideoStreamIntrinsics
   (JNIEnv *, jclass, jlong, jobject);
@@ -482,7 +506,7 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2GetVideoStreamIntrinsics
 /*
  * Class:     org_librealsense_Native
  * Method:    rs2GetStreamProfileData
- * Signature: (JLorg/librealsense/StreamProfileData;)V
+ * Signature: (JLorg/librealsense/streamprofiles/StreamProfileData;)V
  */
 JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2GetStreamProfileData
   (JNIEnv *, jclass, jlong, jobject);

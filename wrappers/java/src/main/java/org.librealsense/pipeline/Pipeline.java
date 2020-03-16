@@ -19,6 +19,11 @@ public class Pipeline {
         return new FrameList(Native.rs2PipelineWaitForFrames(instance, timeout));
     }
 
+    public FrameList pollForFrames() {
+        long instance = Native.rs2PipelinePollForFrames(this.instance);
+        return instance != -1 ? new FrameList(instance) : null;
+    }
+
     public void stop()
     {
         Native.rs2PipelineStop(instance);

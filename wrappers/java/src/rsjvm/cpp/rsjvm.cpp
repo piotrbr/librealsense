@@ -148,6 +148,30 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigEnableDevice
     checkErrors(env, error);
 }
 
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigEnableRecordToFile
+  (JNIEnv *env, jclass, jlong configAddr, jstring filenameStr) {
+    rs2_error *error = NULL;
+    rs2_config* config = (rs2_config*) configAddr;
+
+    const char *filename = env->GetStringUTFChars(filenameStr, 0);
+
+	rs2_config_enable_record_to_file(config, filename, &error);
+	env->ReleaseStringUTFChars(filenameStr, filename);
+	checkErrors(env, error);
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigEnableDeviceFromFile
+  (JNIEnv *env, jclass, jlong configAddr, jstring filenameStr) {
+    rs2_error *error = NULL;
+    rs2_config* config = (rs2_config*) configAddr;
+
+    const char *filename = env->GetStringUTFChars(filenameStr, 0);
+
+	rs2_config_enable_device_from_file(config, filename, &error);
+	env->ReleaseStringUTFChars(filenameStr, filename);
+	checkErrors(env, error);
+}
+
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineStartWithConfig
   (JNIEnv *env, jclass, jlong pipelineAddr, jlong configAddr) {
     rs2_error *error = NULL;
@@ -176,6 +200,18 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineWaitForFrames
     rs2_frame* frame = rs2_pipeline_wait_for_frames(pipeline, timeOut, &error);
     checkErrors(env, error);
     return (jlong)frame;
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelinePollForFrames
+  (JNIEnv *env, jclass, jlong pipelineAddr) {
+    rs2_error *error = NULL;
+    rs2_pipeline* pipeline = (rs2_pipeline*) pipelineAddr;
+    rs2_frame* frame;
+
+    int result = rs2_pipeline_poll_for_frames(pipeline, &frame, &error);
+    checkErrors(env, error);
+
+    return result == 1 ? (jlong)frame : -1;
 }
 
 JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2EmbeddedFramesCount

@@ -5,7 +5,7 @@ import org.librealsense.Native;
 
 public class BasicTest {
 
-    @Test
+    //@Test
     public void testRealSenseCameraAvailable()
     {
         Native.loadNativeLibraries("libs");

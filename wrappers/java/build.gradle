@@ -31,10 +31,10 @@ println "Using JDK: " + System.properties['java.home']
 // change these variables before building
 def SYS_INCLUDE_DIR = '/usr/include'
 def SYS_LOCAL_INCLUDE_DIR = '/usr/local/include'
-def JNI_INCLUDE_DIR = '/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/include'
-def JNI_LIB_DIR = '/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/lib'
+def JNI_INCLUDE_DIR = '/home/peter/jdk-11.0.5/include'
+def JNI_LIB_DIR = '/home/peter/jdk-11.0.5/lib'
 def RS_INCLUDE_DIR = "${project.projectDir}/../../include"
-def RS_LIB = "${project.projectDir}/../../build/librealsense2.dylib"
+def RS_LIB = "/home/peter/ideaprojects/librealsense/build/librealsense2.so.2.33.1"
 def PROJECT_INCLUDE_DIR = "${project.projectDir}/src/rsjvm/headers"
 
 println "Using system include directory: " + SYS_INCLUDE_DIR
@@ -54,6 +54,7 @@ model {
                         srcDir 'src/rsjvm/cpp'
                         include "**/*.cpp"
                     }
+                    
                 }
             }
             buildTypes {
@@ -82,7 +83,7 @@ model {
                         args << RS_LIB
                     }
                 } else {
-                    path "/opt/rh/devtoolset-2/root/usr/bin/gcc"
+                    //path "/opt/rh/devtoolset-2/root/usr/bin/gcc"
                     cppCompiler.withArguments { args ->
                         args << "-O2"
                         args << "-I" + SYS_INCLUDE_DIR

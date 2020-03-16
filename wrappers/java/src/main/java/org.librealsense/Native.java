@@ -89,7 +89,7 @@ public class Native {
             System.load(Paths.get(libPath, "librealsense2.dylib").toAbsolutePath().toString());
             System.load(Paths.get(libPath, "librsjvm.dylib").toAbsolutePath().toString());
         } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
-            System.load(Paths.get(libPath, "librealsense2.so").toAbsolutePath().toString());
+            System.load(Paths.get(libPath, "librealsense2.so.2.33.1").toAbsolutePath().toString());
             System.load(Paths.get(libPath, "librsjvm.so").toAbsolutePath().toString());
         } else {
             // Operating System not supported!
@@ -125,6 +125,10 @@ public class Native {
 
     public native static void rs2ConfigEnableDevice(long config, String serial);
 
+    public native static void rs2ConfigEnableRecordToFile(long config, String filename);
+
+    public native static void rs2ConfigEnableDeviceFromFile(long config, String filename);
+
     public native static void rs2ConfigDisableStream(long config, long stream);
 
     public native static int rs2ConfigCanResolve(long config, long pipeline);
@@ -138,6 +142,8 @@ public class Native {
     public native static long rs2PipelineProfileGetStreams(long pipelineProfile);
 
     public native static long rs2PipelineWaitForFrames(long pipeline, int timeOut);
+
+    public native static long rs2PipelinePollForFrames(long pipeline);
 
     public native static int rs2EmbeddedFramesCount(long frames);
 

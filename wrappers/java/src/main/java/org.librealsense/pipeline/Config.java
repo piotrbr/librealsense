@@ -22,4 +22,12 @@ public class Config {
     public void enableStream(Native.Stream stream, int index, int width, int height, Native.Format format, int fps) {
         Native.rs2ConfigEnableStream(instance, stream.ordinal(), index, width, height, format.ordinal(), fps);
     }
+
+    public void enableRecordToFile(String filename) {
+        Native.rs2ConfigEnableRecordToFile(instance, filename);
+    }
+
+    public void enableDeviceFromFile(String filename) {
+        Native.rs2ConfigEnableDeviceFromFile(instance, filename);
+    }
 }
