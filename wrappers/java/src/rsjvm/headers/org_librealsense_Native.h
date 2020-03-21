@@ -201,6 +201,78 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelinePollForFrames
 
 /*
  * Class:     org_librealsense_Native
+ * Method:    rs2PipelineGetActiveProfile
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineGetActiveProfile
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2PipelineProfileGetDevice
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineProfileGetDevice
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2PlaybackGetDuration
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PlaybackGetDuration
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2PlaybackSeek
+ * Signature: (JJ)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2PlaybackSeek
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2PlaybackGetPosition
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PlaybackGetPosition
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2PlaybackDevicePause
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2PlaybackDevicePause
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2PlaybackDeviceResume
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2PlaybackDeviceResume
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2PlaybackDeviceStop
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2PlaybackDeviceStop
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2PlaybackDeviceGetCurrentStatus
+ * Signature: (J)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_librealsense_Native_rs2PlaybackDeviceGetCurrentStatus
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
  * Method:    rs2EmbeddedFramesCount
  * Signature: (J)I
  */

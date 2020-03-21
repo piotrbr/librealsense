@@ -145,6 +145,24 @@ public class Native {
 
     public native static long rs2PipelinePollForFrames(long pipeline);
 
+    public native static long rs2PipelineGetActiveProfile(long pipeline);
+
+    public native static long rs2PipelineProfileGetDevice(long pipelineProfile);
+
+    public native static long rs2PlaybackGetDuration(long device);
+
+    public native static void rs2PlaybackSeek(long device, long time);
+
+    public native static long rs2PlaybackGetPosition(long device);
+
+    public native static void rs2PlaybackDevicePause(long device);
+
+    public native static void rs2PlaybackDeviceResume(long device);
+
+    public native static void rs2PlaybackDeviceStop(long device);
+
+    public native static String rs2PlaybackDeviceGetCurrentStatus(long device);
+
     public native static int rs2EmbeddedFramesCount(long frames);
 
     public native static long rs2ExtractFrame(long frames, int index);

@@ -1,6 +1,7 @@
 package org.librealsense.pipeline;
 
 import org.librealsense.Native;
+import org.librealsense.devices.Device;
 import org.librealsense.streamprofiles.StreamProfileList;
 
 public class PipelineProfile {
@@ -13,5 +14,9 @@ public class PipelineProfile {
 
     public StreamProfileList getStreams() {
         return new StreamProfileList(Native.rs2PipelineProfileGetStreams(instance));
+    }
+
+    public Device getDevice() {
+        return new Device(Native.rs2PipelineProfileGetDevice(instance));
     }
 }

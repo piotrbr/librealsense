@@ -24,6 +24,10 @@ public class Pipeline {
         return instance != -1 ? new FrameList(instance) : null;
     }
 
+    public PipelineProfile getActiveProfile() {
+        return new PipelineProfile(Native.rs2PipelineGetActiveProfile(instance));
+    }
+
     public void stop()
     {
         Native.rs2PipelineStop(instance);

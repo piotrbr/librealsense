@@ -30,4 +30,32 @@ public class Device {
     public void hardwareReset() {
         Native.rs2HardwareReset(instance);
     }
+
+    public long getPlaybackDuration() {
+        return Native.rs2PlaybackGetDuration(instance);
+    }
+
+    public void playbackSeek(long time) {
+        Native.rs2PlaybackSeek(instance, time);
+    }
+
+    public long getPlaybackPosition() {
+        return Native.rs2PlaybackGetPosition(instance);
+    }
+
+    public void playbackPause() {
+        Native.rs2PlaybackDevicePause(instance);
+    }
+
+    public void playbackResume() {
+        Native.rs2PlaybackDeviceResume(instance);
+    }
+
+    public void playbackStop() {
+        Native.rs2PlaybackDeviceStop(instance);
+    }
+
+    public String gwtPlaybackCurrentStatus() {
+        return Native.rs2PlaybackDeviceGetCurrentStatus(instance);
+    }
 }

@@ -214,6 +214,99 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelinePollForFrames
     return result == 1 ? (jlong)frame : -1;
 }
 
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineGetActiveProfile
+  (JNIEnv *env, jclass, jlong pipelineAddr) {
+    rs2_error *error = NULL;
+    rs2_pipeline* pipeline = (rs2_pipeline*) pipelineAddr;
+
+    rs2_pipeline_profile* pipeline_profile = rs2_pipeline_get_active_profile(pipeline, &error);
+    checkErrors(env, error);
+
+    return (jlong)pipeline_profile;
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineProfileGetDevice
+  (JNIEnv *env, jclass, jlong pipelineProfileAddr) {
+    rs2_error *error = NULL;
+    rs2_pipeline_profile* pipeline_profile = (rs2_pipeline_profile*) pipelineProfileAddr;
+
+    rs2_device* device = rs2_pipeline_profile_get_device(pipeline_profile, &error);
+    checkErrors(env, error);
+
+    return (jlong)device;
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PlaybackGetDuration
+  (JNIEnv *env, jclass, jlong deviceAddr) {
+    rs2_error *error = NULL;
+    rs2_device* device = (rs2_device*) deviceAddr;
+
+    unsigned long long int duration = rs2_playback_get_duration(device, &error);
+    checkErrors(env, error);
+
+    return (jlong)duration;
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2PlaybackSeek
+  (JNIEnv *env, jclass, jlong deviceAddr, jlong time) {
+    rs2_error *error = NULL;
+    rs2_device* device = (rs2_device*) deviceAddr;
+    long long int timeVal = (long long int) time;
+
+    rs2_playback_seek(device, timeVal, &error);
+    checkErrors(env, error);
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PlaybackGetPosition
+  (JNIEnv *env, jclass, jlong deviceAddr) {
+    rs2_error *error = NULL;
+    rs2_device* device = (rs2_device*) deviceAddr;
+
+    unsigned long long int position = rs2_playback_get_position(device, &error);
+    checkErrors(env, error);
+
+    return (jlong)position;
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2PlaybackDevicePause
+  (JNIEnv *env, jclass, jlong deviceAddr) {
+    rs2_error *error = NULL;
+    rs2_device* device = (rs2_device*) deviceAddr;
+
+    rs2_playback_device_pause(device, &error);
+    checkErrors(env, error);
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2PlaybackDeviceResume
+  (JNIEnv *env, jclass, jlong deviceAddr) {
+    rs2_error *error = NULL;
+    rs2_device* device = (rs2_device*) deviceAddr;
+
+    rs2_playback_device_resume(device, &error);
+    checkErrors(env, error);
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2PlaybackDeviceStop
+  (JNIEnv *env, jclass, jlong deviceAddr) {
+    rs2_error *error = NULL;
+    rs2_device* device = (rs2_device*) deviceAddr;
+
+    rs2_playback_device_stop(device, &error);
+    checkErrors(env, error);
+}
+
+JNIEXPORT jstring JNICALL Java_org_librealsense_Native_rs2PlaybackDeviceGetCurrentStatus
+  (JNIEnv *env, jclass, jlong deviceAddr) {
+    rs2_error *error = NULL;
+    rs2_device* device = (rs2_device*) deviceAddr;
+
+    rs2_playback_status status = rs2_playback_device_get_current_status(device, &error);
+    const char* statusStr = rs2_playback_status_to_string(status);
+    checkErrors(env, error);
+    jstring jStatus = env->NewStringUTF(statusStr);
+    return jStatus;
+}
+
 JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2EmbeddedFramesCount
   (JNIEnv *env, jclass, jlong framesAddr) {
     rs2_error *error = NULL;
