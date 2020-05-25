@@ -53,4 +53,8 @@ public class Frame {
     public long getInstance() {
         return instance;
     }
+
+    public float depthFrameGetDistance(int x, int y) {
+        return Native.rs2DepthFrameGetDistance(instance, x, y);
+    }
 }

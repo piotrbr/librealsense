@@ -57,6 +57,14 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteDevice
 
 /*
  * Class:     org_librealsense_Native
+ * Method:    rs2DeleteDeviceList
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteDeviceList
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
  * Method:    rs2HardwareReset
  * Signature: (J)V
  */
@@ -145,6 +153,14 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigDisableStream
 
 /*
  * Class:     org_librealsense_Native
+ * Method:    rs2ConfigDisableAllStreams
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigDisableAllStreams
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
  * Method:    rs2ConfigCanResolve
  * Signature: (JJ)I
  */
@@ -173,6 +189,14 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2PipelineStop
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeletePipeline
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2DeletePipelineProfile
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeletePipelineProfile
   (JNIEnv *, jclass, jlong);
 
 /*

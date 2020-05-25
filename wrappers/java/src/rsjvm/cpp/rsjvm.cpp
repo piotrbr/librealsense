@@ -66,6 +66,12 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteDevice
     rs2_delete_device(device);
 }
 
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteDeviceList
+  (JNIEnv *env, jclass, jlong deviceListAddr) {
+    rs2_device_list* deviceList = (rs2_device_list*) deviceListAddr;
+    rs2_delete_device_list(deviceList);
+}
+
 JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2HardwareReset
   (JNIEnv *env, jclass, jlong deviceAddr) {
     rs2_error *error = NULL;
@@ -170,6 +176,14 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigEnableDeviceFromFil
 	rs2_config_enable_device_from_file(config, filename, &error);
 	env->ReleaseStringUTFChars(filenameStr, filename);
 	checkErrors(env, error);
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ConfigDisableAllStreams
+  (JNIEnv *env, jclass, jlong configAddr) {
+    rs2_error *error = NULL;
+    rs2_config* config = (rs2_config*) configAddr;
+    rs2_config_disable_all_streams(config, &error);
+    checkErrors(env, error);
 }
 
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PipelineStartWithConfig
@@ -631,6 +645,12 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteStreamProfile
   (JNIEnv *, jclass, jlong streamProfileAddr) {
   rs2_stream_profile* streamProfile = (rs2_stream_profile*) streamProfileAddr;
   rs2_delete_stream_profile(streamProfile);
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeletePipelineProfile
+  (JNIEnv *, jclass, jlong pipelineProfileAddr) {
+  rs2_pipeline_profile* pipelineProfile = (rs2_pipeline_profile*) pipelineProfileAddr;
+  rs2_delete_pipeline_profile(pipelineProfile);
 }
 
 JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2GetStreamProfileData

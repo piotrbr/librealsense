@@ -30,4 +30,12 @@ public class Config {
     public void enableDeviceFromFile(String filename) {
         Native.rs2ConfigEnableDeviceFromFile(instance, filename);
     }
+
+    public void disableAllStreams() {
+        Native.rs2ConfigDisableAllStreams(instance);
+    }
+
+    public void delete() {
+        Native.rs2DeleteConfig(instance);
+    }
 }

@@ -30,4 +30,8 @@ public class DeviceList {
         }
         return devices;
     }
+
+    public void delete() {
+        Native.rs2DeleteDeviceList(instance);
+    }
 }

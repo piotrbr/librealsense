@@ -19,4 +19,8 @@ public class PipelineProfile {
     public Device getDevice() {
         return new Device(Native.rs2PipelineProfileGetDevice(instance));
     }
+
+    public void delete() {
+
+    }
 }

@@ -109,6 +109,8 @@ public class Native {
 
     public native static void rs2DeleteDevice(long device);
 
+    public native static void rs2DeleteDeviceList(long deviceList);
+
     public native static void rs2HardwareReset(long device);
 
     public native static int rs2SupportsDeviceInfo(long device, int info);
@@ -131,6 +133,8 @@ public class Native {
 
     public native static void rs2ConfigDisableStream(long config, long stream);
 
+    public native static void rs2ConfigDisableAllStreams(long config);
+
     public native static int rs2ConfigCanResolve(long config, long pipeline);
 
     public native static long rs2PipelineStartWithConfig(long pipeline, long config);
@@ -138,6 +142,8 @@ public class Native {
     public native static void rs2PipelineStop(long pipeline);
 
     public native static void rs2DeletePipeline(long pipeline);
+
+    public native static void rs2DeletePipelineProfile(long pipelineProfile);
 
     public native static long rs2PipelineProfileGetStreams(long pipelineProfile);
 
