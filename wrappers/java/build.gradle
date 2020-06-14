@@ -34,7 +34,7 @@ def SYS_LOCAL_INCLUDE_DIR = '/usr/local/include'
 def JNI_INCLUDE_DIR = '/home/peter/jdk-11.0.5/include'
 def JNI_LIB_DIR = '/home/peter/jdk-11.0.5/lib'
 def RS_INCLUDE_DIR = "${project.projectDir}/../../include"
-def RS_LIB = "/home/peter/ideaprojects/librealsense/build/librealsense2.so.2.33.1"
+def RS_LIB = "/home/peter/ideaprojects/librealsense/build/librealsense2.so.2.34.1"
 def PROJECT_INCLUDE_DIR = "${project.projectDir}/src/rsjvm/headers"
 
 println "Using system include directory: " + SYS_INCLUDE_DIR
