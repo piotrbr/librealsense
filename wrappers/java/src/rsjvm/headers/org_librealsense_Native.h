@@ -457,6 +457,38 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreatePointCloud
 
 /*
  * Class:     org_librealsense_Native
+ * Method:    rs2CreateDecimationFilter
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateDecimationFilter
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2CreateTemporalFilter
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateTemporalFilter
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2CreateSpatialFilter
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateSpatialFilter
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2CreateHoleFillingFilter
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateHoleFillingFilter
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_librealsense_Native
  * Method:    rs2CreateAlign
  * Signature: (I)J
  */
@@ -614,6 +646,14 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2GetStreamProfileData
  */
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2DeleteIntrinsics
   (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2SetOption
+ * Signature: (JIF)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2SetOption
+  (JNIEnv *, jclass, jlong, jint, jfloat);
 
 #ifdef __cplusplus
 }

@@ -19,4 +19,8 @@ public abstract class ProcessingBlock {
 
         return original;
     }
+
+    public long getInstance() {
+        return instance;
+    }
 }

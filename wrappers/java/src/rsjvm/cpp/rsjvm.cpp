@@ -508,6 +508,42 @@ JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreatePointCloud
     return (jlong)block;
 }
 
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateDecimationFilter
+  (JNIEnv *env, jclass) {
+    rs2_error *error = NULL;
+    rs2_processing_block* block = rs2_create_decimation_filter_block(&error);
+    checkErrors(env, error);
+
+    return (jlong)block;
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateTemporalFilter
+  (JNIEnv *env, jclass) {
+    rs2_error *error = NULL;
+    rs2_processing_block* block = rs2_create_temporal_filter_block(&error);
+    checkErrors(env, error);
+
+    return (jlong)block;
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateSpatialFilter
+  (JNIEnv *env, jclass) {
+    rs2_error *error = NULL;
+    rs2_processing_block* block = rs2_create_spatial_filter_block(&error);
+    checkErrors(env, error);
+
+    return (jlong)block;
+}
+
+JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2CreateHoleFillingFilter
+  (JNIEnv *env, jclass) {
+    rs2_error *error = NULL;
+    rs2_processing_block* block = rs2_create_hole_filling_filter_block(&error);
+    checkErrors(env, error);
+
+    return (jlong)block;
+}
+
 JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2GetFramePointsCount
   (JNIEnv *env, jclass, jlong frameAddr) {
     rs2_error *error = NULL;
@@ -651,6 +687,15 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeletePipelineProfile
   (JNIEnv *, jclass, jlong pipelineProfileAddr) {
   rs2_pipeline_profile* pipelineProfile = (rs2_pipeline_profile*) pipelineProfileAddr;
   rs2_delete_pipeline_profile(pipelineProfile);
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2SetOption
+  (JNIEnv *env, jclass, jlong optionsAddr, jint optionOrd, jfloat value) {
+    rs2_error *error = NULL;
+    rs2_options* options = (rs2_options*) optionsAddr;
+    rs2_option option = static_cast<rs2_option>(optionOrd);
+    rs2_set_option(options, option, value, &error);
+    checkErrors(env, error);
 }
 
 JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2GetStreamProfileData

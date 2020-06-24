@@ -209,6 +209,14 @@ public class Native {
 
     public native static long rs2CreatePointCloud();
 
+    public native static long rs2CreateDecimationFilter();
+
+    public native static long rs2CreateTemporalFilter();
+
+    public native static long rs2CreateSpatialFilter();
+
+    public native static long rs2CreateHoleFillingFilter();
+
     public native static long rs2CreateAlign(int stream);
 
     public native static int rs2GetFramePointsCount(long frame);
@@ -248,6 +256,8 @@ public class Native {
     public native static void rs2GetStreamProfileData(long streamProfile, StreamProfileData data);
 
     public native static long rs2DeleteIntrinsics(long intrinsics);
+
+    public native static void rs2SetOption(long options, int optionOrdinal, float value);
 
 
     public static enum Stream {
