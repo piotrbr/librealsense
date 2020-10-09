@@ -55,6 +55,10 @@ public class Device {
         Native.rs2PlaybackDeviceStop(instance);
     }
 
+    public void recordDevicePause() {
+        Native.rs2RecordDevicePause(instance);
+    }
+
     public String gwtPlaybackCurrentStatus() {
         return Native.rs2PlaybackDeviceGetCurrentStatus(instance);
     }

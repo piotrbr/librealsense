@@ -20,6 +20,10 @@ public abstract class ProcessingBlock {
         return original;
     }
 
+    public void delete() {
+        Native.rs2DeleteProcessingBlock(instance);
+    }
+
     public long getInstance() {
         return instance;
     }

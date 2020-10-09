@@ -169,6 +169,8 @@ public class Native {
 
     public native static String rs2PlaybackDeviceGetCurrentStatus(long device);
 
+    public native static void  rs2RecordDevicePause(long device);
+
     public native static int rs2EmbeddedFramesCount(long frames);
 
     public native static long rs2ExtractFrame(long frames, int index);
@@ -198,6 +200,8 @@ public class Native {
     public native static void rs2FrameAddRef(long frame);
 
     public native static void rs2ProcessFrame(long processingBlock, long frame);
+
+    public native static void rs2DeleteProcessingBlock(long processingBlock);
 
     public native static long rs2PollForFrame(long queue);
 

@@ -297,6 +297,14 @@ JNIEXPORT jstring JNICALL Java_org_librealsense_Native_rs2PlaybackDeviceGetCurre
 
 /*
  * Class:     org_librealsense_Native
+ * Method:    rs2RecordDevicePause
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2RecordDevicePause
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_librealsense_Native
  * Method:    rs2EmbeddedFramesCount
  * Signature: (J)I
  */
@@ -414,6 +422,14 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2FrameAddRef
  */
 JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ProcessFrame
   (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_librealsense_Native
+ * Method:    rs2DeleteProcessingBlock
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteProcessingBlock
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     org_librealsense_Native

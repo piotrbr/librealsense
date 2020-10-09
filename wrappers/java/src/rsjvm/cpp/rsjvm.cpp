@@ -321,6 +321,15 @@ JNIEXPORT jstring JNICALL Java_org_librealsense_Native_rs2PlaybackDeviceGetCurre
     return jStatus;
 }
 
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2RecordDevicePause
+  (JNIEnv *env, jclass, jlong deviceAddr) {
+    rs2_error *error = NULL;
+    rs2_device* device = (rs2_device*) deviceAddr;
+
+    rs2_record_device_pause(device, &error);
+    checkErrors(env, error);
+}
+
 JNIEXPORT jint JNICALL Java_org_librealsense_Native_rs2EmbeddedFramesCount
   (JNIEnv *env, jclass, jlong framesAddr) {
     rs2_error *error = NULL;
@@ -458,6 +467,12 @@ JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2ProcessFrame
     rs2_frame* frame = (rs2_frame*)frameAddr;
     rs2_process_frame(block, frame, &error);
     checkErrors(env, error);
+}
+
+JNIEXPORT void JNICALL Java_org_librealsense_Native_rs2DeleteProcessingBlock
+  (JNIEnv *env, jclass, jlong blockAddr) {
+    rs2_processing_block* block = (rs2_processing_block*)blockAddr;
+    rs2_delete_processing_block(block);
 }
 
 JNIEXPORT jlong JNICALL Java_org_librealsense_Native_rs2PollForFrame
